@@ -1,16 +1,16 @@
 <template>
-  <div class="ai-chat">
-    <h1 class="chat-title">AI School Assistant</h1>
-    <div class="chat-container" ref="chatContainer">
+  <div class="ai-chat max-w-3xl mx-auto p-8 bg-gray-100 rounded-2xl shadow-md">
+    <h1 class="chat-title text-2xl text-gray-800 mb-5 text-center">AI School Assistant</h1>
+    <div class="chat-container h-[500px] overflow-y-auto border border-gray-300 p-5 mb-5 bg-white rounded-lg shadow-inner" ref="chatContainer">
       <div v-for="(message, index) in messages" :key="index" :class="['message', message.type]">
-        <div class="message-content">{{ message.text }}</div>
+        <div class="message-content p-2">{{ message.text }}</div>
       </div>
     </div>
-    <div class="input-container">
-      <input v-model="userInput" @keyup.enter="sendMessage" placeholder="Ask a question..." />
-      <button @click="sendMessage">
-        <span class="button-text">Send</span>
-        <i class="fas fa-paper-plane"></i>
+    <div class="input-container flex bg-white border-2 border-blue-500 rounded-lg overflow-hidden transition-shadow duration-300 ease-in-out focus-within:shadow-lg">
+      <input v-model="userInput" @keyup.enter="sendMessage" placeholder="Ask a question..." class="flex-grow p-4 border-none outline-none text-lg" />
+      <button @click="sendMessage" class="bg-blue-500 text-white border-none py-2 px-6 text-lg cursor-pointer transition-colors duration-300 ease-in-out flex items-center justify-center hover:bg-blue-600">
+        <span class="button-text mr-2">Send</span>
+        <i class="fas fa-paper-plane text-base"></i>
       </button>
     </div>
   </div>
@@ -34,9 +34,7 @@ const generationConfig = {
 };
 
 const presetQuestions = [
-  { text: "Please ensure that your response is both accurate and concise, based on the available data. And if the user is asking a question that is not related to the school," },//If no data exists, respond with: 'There is no information available at this moment.'  respond with: 'I'm sorry, I can't answer that question.'. And also if the user continues to ask, respond with the given data.
-  // { text: "input: Question" },
-  // { text: "output: Answer" },
+  { text: "Please ensure that your response is both accurate and concise, based on the available data. And if the user is asking a question that is not related to the school," },
   { text: "input: Where is the library located?" },
   { text: "output: The library is located on the second floor of the main building, near the science labs." },
 ];
@@ -89,33 +87,6 @@ const scrollToBottom = () => {
 </script>
 
 <style scoped>
-.ai-chat {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 30px;
-  background-color: #f0f4f8;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.chat-title {
-  font-size: 28px;
-  color: #2c3e50;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.chat-container {
-  height: 500px;
-  overflow-y: auto;
-  border: 1px solid #e0e0e0;
-  padding: 20px;
-  margin-bottom: 20px;
-  background-color: #ffffff;
-  border-radius: 15px;
-  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
 .message {
   margin-bottom: 20px;
   padding: 12px 18px;
@@ -131,68 +102,16 @@ const scrollToBottom = () => {
 }
 
 .user {
-  background-color: #4a90e2;
-  color: white;
-  margin-left: auto;
-  text-align: right;
+  @apply bg-blue-500 text-white ml-auto text-right;
 }
 
 .ai {
-  background-color: #f1f1f1;
-  color: #333;
-  text-align: left;
-}
-
-.input-container {
-  display: flex;
-  background-color: #fff;
-  border: 2px solid #4a90e2;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: box-shadow 0.3s ease;
-}
-
-.input-container:focus-within {
-  box-shadow: 0 0 10px rgba(74, 144, 226, 0.5);
-}
-
-input {
-  flex-grow: 1;
-  padding: 15px;
-  border: none;
-  outline: none;
-  font-size: 16px;
-}
-
-button {
-  background-color: #4a90e2;
-  color: white;
-  border: none;
-  padding: 0 25px;
-  font-size: 16px;
-  cursor: pointer;
-  outline: none;
-  transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-button:hover {
-  background-color: #3a7bc8;
-}
-
-.button-text {
-  margin-right: 8px;
-}
-
-.fas {
-  font-size: 14px;
+  @apply bg-gray-200 text-gray-800 text-left;
 }
 
 @media (max-width: 600px) {
   .ai-chat {
-    padding: 20px;
+    @apply p-5;
   }
 
   .chat-container {
