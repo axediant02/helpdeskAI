@@ -5,15 +5,8 @@
     </div>
   </template>
   
-  <script>
+  <script setup>
   import Navbar from "@/components/Navbar.vue";
   import UserInput from '@/components/UserInput.vue';
   
-  export default {
-    components: {
-      Navbar,
-      UserInput
-    },
-  };
-  </script>
-  
+  </script>  

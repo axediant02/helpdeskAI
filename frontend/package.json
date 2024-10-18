@@ -11,6 +11,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.17.2",
     "axios": "^1.7.7",
+    "lucide-vue-next": "^0.453.0",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"
   },
