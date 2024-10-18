@@ -4,7 +4,7 @@ import About from '@/components/About.vue'
 import Faq from '@/components/Faq.vue'
 import Contact from '@/components/Contact.vue'
 import Help from '@/components/Help.vue'
-import AdminCMS from '@/pages/AdminCMS.vue'
+import AdminPanel from '@/pages/AdminPanel.vue'
 import AdminLogin from '@/components/AdminLogin.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,7 +37,7 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'admin',
-      component: AdminCMS
+      component: AdminPanel
     },
     {
       path: '/admin-login',

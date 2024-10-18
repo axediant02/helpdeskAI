@@ -3,8 +3,11 @@
     <Loader v-if="isLoading" class="w-10 h-10 animate-spin mb-4" />
     <p v-if="isLoading" class="text-lg font-medium text-gray-500">Loading Data, Please Wait...</p>
 
-
-    <table v-else class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
+    <div v-else class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
+      <div class="flex flex-row items-center justify-end w-full mb-4">
+      <ExportCSV />
+    </div>
+    <table class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
       <thead class="bg-gray-50">
         <tr>
           <th scope="col" class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Question</th>
@@ -13,7 +16,7 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <tr v-for="(item, index) in mockQnA" :key="index" class="hover:bg-gray-50">
+        <tr v-for="(item, index) in mockQnA" :key="index" class="hover:bg-gray-50" :class="{'bg-gray-100': index % 2 === 0}">
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.question }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.answer }}</td>
           <td class="px-6 py-4 whitespace-nowrap">
@@ -33,12 +36,13 @@
         </tr>
       </tbody>
     </table>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-
+import ExportCSV from '@/components/ExportCSV.vue';
 const isLoading = ref(true);
 const mockQnA = ref([]);
 
