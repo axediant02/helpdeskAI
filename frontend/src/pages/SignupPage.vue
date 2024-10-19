@@ -24,9 +24,18 @@
         <div class="mb-6">
           <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
           <input v-model="password" type="password" id="password" name="password" class="border-2 border-gray-300 p-2 w-full rounded" required>
+          <div v-if="password.length > 0 && password.length < 8" class="text-red-500 text-sm mt-2">Password must be at least 8 characters</div>
+        </div>
+        <div class="mb-6">
+          <label for="password_confirmation" class="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
+          <input v-model="password_confirmation" type="password" id="password_confirmation" name="password_confirmation" class="border-2 border-gray-300 p-2 w-full rounded" required>
+          <div v-if="password !== password_confirmation" class="text-red-500 text-sm mt-2">Passwords do not match</div>
         </div>
         <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Sign Up</button>
       </form>
+      <div class="mt-4">
+        <label for="login" class="text-sm font-medium flex items-center justify-center">Already have an account?<router-link to="/login" class="text-sm font-medium text-blue-700 flex items-center ml-2">Log In</router-link></label>
+      </div>
     </div>
   </div>
 </template>
@@ -34,18 +43,35 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const name = ref('');
 const email = ref('');
 const password = ref('');
-const role = ref('student');
+const password_confirmation = ref('');
 const router = useRouter();
+const error = ref(null);
 
-const signup = () => {
-  // Assuming there's a function to handle the signup process
-  // This is a placeholder for the actual implementation
-  console.log('Signing up with:', name.value, email.value, password.value, role.value);
-  // After successful signup, redirect to the login page
-  router.push('/login');
+const signup = async () => {
+  try {
+    const response = await axios.post('/api/signup', {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      password_confirmation: password_confirmation.value,
+    });
+    console.log('Signup successful:', response.data);
+    router.push('/login');
+  } catch (error) {
+    console.error('Signup failed:', error.response.data);
+    if (error.response.data.message === 'The password must be at least 8 characters.') {
+      error.value = 'Password must be at least 8 characters.';
+    } else if (error.response.data.message === 'The password confirmation does not match.') {
+      error.value = 'Passwords do not match.';
+    } else {
+      error.value = error.response.data.message;
+    }
+  }
 };
+
 </script>

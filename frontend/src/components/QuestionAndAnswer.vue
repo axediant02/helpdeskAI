@@ -1,10 +1,11 @@
 <template>
   <div class="flex flex-col items-center justify-center p-4 w-screen">
-    <Loader v-if="isLoading" class="w-10 h-10 animate-spin mb-4" />
+    <div v-if="isLoading" class="w-10 h-10 animate-spin mb-4"></div>
     <p v-if="isLoading" class="text-lg font-medium text-gray-500">Loading Data, Please Wait...</p>
 
     <div v-else class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
       <div class="flex flex-row items-center justify-end w-full mb-4">
+        
       <ExportCSV />
     </div>
     <table class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
@@ -43,6 +44,7 @@
 <script setup>
 import { ref } from 'vue';
 import ExportCSV from '@/components/ExportCSV.vue';
+
 const isLoading = ref(true);
 const mockQnA = ref([]);
 
