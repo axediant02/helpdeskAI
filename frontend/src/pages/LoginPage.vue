@@ -15,7 +15,11 @@
         <form @submit.prevent="login">
           <div class="mb-4">
             <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+<<<<<<< HEAD
             <input v-model="email" type="text" id="email" name="email" class="border-2 border-gray-300 p-2 w-full rounded" required>
+=======
+            <input v-model="email" type="email" id="email" name="email" class="border-2 border-gray-300 p-2 w-full rounded" required>
+>>>>>>> d1630d8ad7268ec7a4577b397895b7f3b0fbf6a5
           </div>
           <div class="mb-6 relative">
             <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
@@ -51,7 +55,7 @@ const login= async() =>{
         console.log('Login successful:', response.data);
         router.push('/');
     } catch (error) {
-        console.error('Login failed:', error);
+        console.error('Login failed:', error.response.data.message);
     }
 }
 

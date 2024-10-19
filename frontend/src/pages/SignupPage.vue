@@ -20,11 +20,13 @@
         <div class="mb-4">
           <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
           <input v-model="email" type="email" id="email" name="email" class="border-2 border-gray-300 p-2 w-full rounded" required>
+          <div v-if="emailError" class="text-red-500 text-sm mt-2">Email is already used</div>
         </div>
         <div class="mb-6">
           <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
           <input v-model="password" type="password" id="password" name="password" class="border-2 border-gray-300 p-2 w-full rounded" required>
           <div v-if="password.length > 0 && password.length < 8" class="text-red-500 text-sm mt-2">Password must be at least 8 characters</div>
+          <div v-if="password.length > 0 && (!/[a-zA-Z]/.test(password) || !/\d/.test(password))" class="text-red-500 text-sm mt-2">Password must contain letters and numbers</div>
         </div>
         <div class="mb-6">
           <label for="password_confirmation" class="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
@@ -49,6 +51,7 @@ const name = ref('');
 const email = ref('');
 const password = ref('');
 const password_confirmation = ref('');
+const emailError = ref(false);
 const router = useRouter();
 const error = ref(null);
 
@@ -68,6 +71,10 @@ const signup = async () => {
       error.value = 'Password must be at least 8 characters.';
     } else if (error.response.data.message === 'The password confirmation does not match.') {
       error.value = 'Passwords do not match.';
+    } else if (error.response.data.message === 'The email has already been taken.') {
+      emailError.value = true;
+    } else if (error.response.data.message === 'The password must contain at least one letter and one number.') {
+      error.value = 'Password must contain letters and numbers.';
     } else {
       error.value = error.response.data.message;
     }
