@@ -5,7 +5,9 @@ import Faq from '@/components/Faq.vue'
 import Contact from '@/components/Contact.vue'
 import Help from '@/components/Help.vue'
 import AdminPanel from '@/pages/AdminPanel.vue'
-import AdminLogin from '@/components/AdminLogin.vue'
+import LoginPage from '@/pages/LoginPage.vue'
+import SignupPage from '@/pages/SignupPage.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -40,9 +42,14 @@ const router = createRouter({
       component: AdminPanel
     },
     {
-      path: '/admin-login',
-      name: 'admin-login',
-      component: AdminLogin
+      path: '/login',
+      name: 'login',
+      component: LoginPage
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: SignupPage
     },
   ]
 })
