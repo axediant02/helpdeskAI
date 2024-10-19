@@ -31,18 +31,25 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue';
-  import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
   
   const username = ref('');
   const password = ref('');
-  const router = useRouter();
-  
-  const login = () => {
-    if (username.value === 'admin' && password.value === 'admin') {
-      router.push('/admin');
-    } else {
-      alert('Invalid credentials');
+const router = useRouter();
+
+const login= async() =>{
+    try {
+        const response = await axios.post('api/login', {
+            username: username.value,
+            password: password.value,
+        });
+        console.log('Login successful:', response.data);
+        router.push('/');
+    } catch (error) {
+        console.error('Login failed:', error);
     }
-  };
+}
+
   </script>  
