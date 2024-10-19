@@ -10,18 +10,22 @@
           </router-link>
           <span class="text-sm font-medium text-gray-700"><a href="/">Back</a></span>
         </div>
-        <h2 class="text-2xl font-bold text-center mx-auto pr-14">Admin Login</h2>
+        <h2 class="text-2xl font-bold text-center mx-auto pr-14">Sign Up</h2>
       </div>
-      <form @submit.prevent="login">
+      <form @submit.prevent="signup">
         <div class="mb-4">
-          <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
-          <input v-model="username" type="text" id="username" name="username" class="border-2 border-gray-300 p-2 w-full rounded" required>
+          <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+          <input v-model="name" type="text" id="name" name="name" class="border-2 border-gray-300 p-2 w-full rounded" required>
+        </div>
+        <div class="mb-4">
+          <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+          <input v-model="email" type="email" id="email" name="email" class="border-2 border-gray-300 p-2 w-full rounded" required>
         </div>
         <div class="mb-6">
           <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
           <input v-model="password" type="password" id="password" name="password" class="border-2 border-gray-300 p-2 w-full rounded" required>
         </div>
-        <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Login</button>
+        <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Sign Up</button>
       </form>
     </div>
   </div>
@@ -29,15 +33,19 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-const username = ref('');
+const name = ref('');
+const email = ref('');
 const password = ref('');
+const role = ref('student');
+const router = useRouter();
 
-const login = () => {
-  if (username.value === 'admin' && password.value === 'admin') {
-    router.push('/admin');
-  } else {
-    alert('Invalid credentials');
-  }
+const signup = () => {
+  // Assuming there's a function to handle the signup process
+  // This is a placeholder for the actual implementation
+  console.log('Signing up with:', name.value, email.value, password.value, role.value);
+  // After successful signup, redirect to the login page
+  router.push('/login');
 };
 </script>
