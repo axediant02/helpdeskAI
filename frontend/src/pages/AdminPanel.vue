@@ -23,7 +23,9 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const logout = () => {
-    router.push('/admin-login');
+    router.push('/');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
 };
 </script>
 
