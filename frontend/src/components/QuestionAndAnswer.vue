@@ -18,11 +18,12 @@
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-for="(item, index) in questions" :key="index" class="hover:bg-gray-50" :class="{'bg-gray-100': index % 2 === 0}">
+          <tr v-for="(item, index) in mockQnA" :key="index" class="hover:bg-gray-50" :class="{'bg-gray-100': index % 2 === 0}">
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.question }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.answer }}</td>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex space-x-2">
+                <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300" title="Delete">
                 <button @click="editItem(item)" class="text-blue-600 hover:text-blue-800 p-2 rounded-full bg-blue-100">
                   <i class="mdi mdi-pencil"></i>
                 </button>
@@ -83,5 +84,4 @@ const deleteItem = async (id) => {
 </script>
 
 <style scoped>
-
 </style>

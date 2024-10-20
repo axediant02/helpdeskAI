@@ -14,8 +14,8 @@
         </div>
         <form @submit.prevent="login">
           <div class="mb-4">
-            <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username or Email</label>
-            <input v-model="username" type="text" id="username" name="username" class="border-2 border-gray-300 p-2 w-full rounded" required>
+            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+            <input v-model="email" type="email" id="email" name="email" class="border-2 border-gray-300 p-2 w-full rounded" required>
           </div>
           <div class="mb-6 relative">
             <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
@@ -35,20 +35,20 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
   
-  const username = ref('');
+  const email = ref('');
   const password = ref('');
 const router = useRouter();
 
 const login= async() =>{
     try {
         const response = await axios.post('api/login', {
-            username: username.value,
+            email: email.value,
             password: password.value,
         });
         console.log('Login successful:', response.data);
         router.push('/');
     } catch (error) {
-        console.error('Login failed:', error);
+        console.error('Login failed:', error.response.data.message);
     }
 }
 
