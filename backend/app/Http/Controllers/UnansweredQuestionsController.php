@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UnansweredQuestion;  // Import the model
+use App\Models\UnansweredQuestions;
 use Illuminate\Http\Request;
 
 class UnansweredQuestionsController extends Controller
@@ -12,7 +12,7 @@ class UnansweredQuestionsController extends Controller
      */
     public function index()
     {
-        $questions = UnansweredQuestion::all();
+        $questions = UnansweredQuestions::all(); // Changed from UnansweredQuestion to UnansweredQuestions
         return response()->json($questions, 200);
     }
 
@@ -27,7 +27,7 @@ class UnansweredQuestionsController extends Controller
         ]);
 
         // Create the question
-        $question = UnansweredQuestion::create($validated);
+        $question = UnansweredQuestions::create($validated);
         return response()->json($question, 201);
     }
 
@@ -36,7 +36,7 @@ class UnansweredQuestionsController extends Controller
      */
     public function show($id)
     {
-        $question = UnansweredQuestion::find($id);
+        $question = UnansweredQuestions::find($id);
 
         // Check if question exists
         if (!$question) {
@@ -51,7 +51,7 @@ class UnansweredQuestionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $question = UnansweredQuestion::find($id);
+        $question = UnansweredQuestions::find($id);
 
         // Check if question exists
         if (!$question) {
@@ -74,7 +74,7 @@ class UnansweredQuestionsController extends Controller
      */
     public function destroy($id)
     {
-        $question = UnansweredQuestion::find($id);
+        $question = UnansweredQuestions::find($id);
 
         // Check if question exists
         if (!$question) {
