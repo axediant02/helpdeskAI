@@ -27,29 +27,27 @@
   
   const exportData = async () => {
     try {
-      const response = await axios.get('/api/unanswered-questions'); // Fetch data from your API
-      const csvContent = ["Question,Answer"]; // Initialize CSV header
+      const response = await axios.get('/api/unanswered-questions');
+      const csvContent = ["Question,Answer"];
   
-      // Populate CSV content with data from the response
       response.data.forEach((item) => {
-        csvContent.push(`"${item.question}","${item.answer}"`); // Use quotes to handle commas in text
+        csvContent.push(`"${item.question}","${item.answer}"`);
       });
   
-      const csvString = csvContent.join("\n"); // Join array into a string with new lines
+      const csvString = csvContent.join("\n");
       const encodedUri = encodeURI(`data:text/csv;charset=utf-8,${csvString}`);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", "unanswered_questions.csv"); // Filename for download
-      document.body.appendChild(link); // Append link to the body
-      link.click(); // Trigger download
-      document.body.removeChild(link); // Clean up by removing the link
+      link.setAttribute("download", "unanswered_questions.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     } catch (error) {
-      console.error('Error exporting data:', error); // Handle errors
+      console.error('Error exporting data:', error);
     }
   };
   </script>
   
   <style scoped>
-  /* Add any styles specific to the ExportCSV component here */
+
   </style>
-  
