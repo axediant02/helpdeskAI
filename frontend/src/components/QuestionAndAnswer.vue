@@ -5,7 +5,7 @@
 
     <div v-else class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
       <div class="flex flex-row items-center justify-end w-full mb-4">
-        <ExportCSV :questions="questions" /> <!-- Pass questions as a prop -->
+        <ExportCSV :questions="questions" />
       </div>
       <table class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
         <thead class="bg-gray-50">
@@ -41,6 +41,14 @@
                 <button @click="() => deleteItem(item.id)" class="text-red-600 hover:text-red-800 p-2 rounded-full bg-red-100">
                   <i class="mdi mdi-delete"></i>
                 </button>
+                <template v-if="editing && currentItemId === item.id">
+                  <button @click="updateItem" class="text-green-600 hover:text-green-800 p-2 rounded-full bg-green-100">
+                    <i class="mdi mdi-check"></i>
+                  </button>
+                  <button @click="cancelEdit" class="text-gray-600 hover:text-gray-800 p-2 rounded-full bg-gray-100">
+                    <i class="mdi mdi-close"></i>
+                  </button>
+                </template>
               </div>
             </td>
           </tr>
@@ -79,46 +87,45 @@ onMounted(() => {
 });
 
 const updateItem = async () => {
-  if (editQuestion.value && editAnswer.value) { // Check if fields are not empty
+  if (editQuestion.value && editAnswer.value) {
     try {
       await axios.put(`/api/unanswered-questions/${currentItemId.value}`, {
         question: editQuestion.value,
         answer: editAnswer.value,
       });
       editing.value = false;
-      await fetchData(); // Refresh the data after update
+      await fetchData();
     } catch (error) {
       console.error('Error updating item:', error);
     }
   } else {
-    console.error('Question and answer cannot be empty'); // Handle empty fields
+    console.error('Question and answer cannot be empty');
   }
 };
 
-// Function to cancel editing
+
 const cancelEdit = () => {
   editing.value = false;
 };
 
-// Function to delete an item
 const deleteItem = async (id) => {
   try {
     await axios.delete(`/api/unanswered-questions/${id}`);
-    await fetchData(); // Refresh the data after deletion
+    await fetchData();
   } catch (error) {
     console.error('Error deleting item:', error);
   }
 };
 
-// Function to edit an item
+
 const editItem = (item) => {
   currentItemId.value = item.id;
   editQuestion.value = item.question;
   editAnswer.value = item.answer;
-  editing.value = true; // Set editing to true to enable edit mode
+  editing.value = true;
 };
 </script>
 
 <style scoped>
-/* Add any styles specific to the main component here */
+
 </style>
