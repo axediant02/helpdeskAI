@@ -35,7 +35,7 @@ const password = ref('');
 
 const login = () => {
   if (username.value === 'admin' && password.value === 'admin') {
-    // Redirect to admin panel
+    router.push('/admin');
   } else {
     alert('Invalid credentials');
   }
