@@ -16,10 +16,10 @@
             <div
               v-for="(message, index) in messages"
               :key="index"
-              :class="[
+              :class="[ 
                 'max-w-[80%] p-3 rounded-lg transition-all duration-300',
                 message.type === 'user' ? 'ml-auto bg-blue-500 text-white' : 'bg-gray-100 text-gray-800',
-                {'opacity-50': isLoading && index === messages.length - 1}
+                { 'opacity-50': isLoading && index === messages.length - 1 }
               ]"
             >
               <div class="flex items-center space-x-2 mb-1">
@@ -62,7 +62,6 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-// import { Send, Loader, MessageSquare } from 'lucide-vue-next';
 import { Send, Loader, MessageSquare } from 'lucide-vue-next'; 
 
 const genAI = ref(null);
@@ -71,7 +70,6 @@ const userInput = ref('');
 const messages = ref([]);
 const chatContainer = ref(null);
 const isLoading = ref(false);
-const conversationHistory = ref([]);
 
 const generationConfig = {
   temperature: 0.7,
@@ -81,8 +79,8 @@ const generationConfig = {
 };
 
 const systemPrompt = {
-  text: `You are a virtual assistant for Consolatrix College of Toledo City (CCTC), responsible for answering questions from students using up-to-date school information. You have access to details like building locations, department contacts, event schedules, and FAQs, all provided by the school's administrators.Clarity & Accuracy: Ensure that your responses are clear, concise, and based on the most recent data. Always reference the latest information to ensure accuracy.Handling Unclear Queries: If a student’s question is vague or incomplete, kindly request more details to provide an accurate answer. For example: "Could you clarify which building or service you're referring to?"Unavailable Information: If you can't find the requested information in the provided data, politely inform the student: "This information is currently unavailable. Please check with the school office for further assistance."Out-of-Scope Questions: For questions unrelated to Consolatrix College, respond with: "I'm here to help with questions about Consolatrix College. It seems your query is outside my scope. Please contact the school office or check the website for more info. Let me know if you have any other questions!"Tone and Response Format: Maintain a friendly, professional, and approachable tone in all responses. Keep answers brief and simple, especially for students unfamiliar with school procedures. Example: "The library is located in the South Building, next to the cafeteria. It’s open from 8 AM to 5 PM, Monday to Friday."Missing or Outdated Data: If data is outdated or missing, inform the student politely: "I'm sorry, the information you're looking for is not available at the moment. Please contact the school office for assistance, or check back later after we've updated our system.",`
-  };
+  text: `You are a virtual assistant for Consolatrix College of Toledo City (CCTC), responsible for answering questions from students using up-to-date school information. You will use the data given to you to answer the questions.`,
+};
 
 const formatConversationHistory = () => {
   return messages.value.slice(-6).map(msg => ({
@@ -95,10 +93,9 @@ const getTimestamp = (timestamp) => {
   const now = new Date();
   const msgTime = new Date(timestamp);
   
-  if (now.toDateString() === msgTime.toDateString()) {
-    return msgTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
-  return msgTime.toLocaleDateString();
+  return now.toDateString() === msgTime.toDateString() 
+    ? msgTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+    : msgTime.toLocaleDateString();
 };
 
 const sendMessage = async () => {
@@ -110,7 +107,7 @@ const sendMessage = async () => {
     text: userInput.value,
     timestamp: currentTime
   });
-  
+
   const question = userInput.value;
   userInput.value = '';
   isLoading.value = true;
@@ -131,17 +128,13 @@ const sendMessage = async () => {
     });
   } finally {
     isLoading.value = false;
+    nextTick(() => scrollToBottom());
   }
-
-  nextTick(() => {
-    scrollToBottom();
-  });
 };
 
 const generateAnswer = async (question) => {
-
   const history = formatConversationHistory();
-  
+
   const parts = [
     systemPrompt,
     ...history,
