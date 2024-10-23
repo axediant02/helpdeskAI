@@ -1,17 +1,20 @@
 <template>
-    <div>
-      <div>
-      <Navbar />
-      <div class="flex justify-end">
-      <Button label="Logout" backgroundColor="red" />
-      </div>
-      </div>
-      <UserInput/>
-    </div>
-  </template>
-  
-  <script setup>
-  import Navbar from "@/components/Navbar.vue";
-  import UserInput from '@/components/UserInput.vue';
-  import Button from '@/components/Button.vue';
-  </script>  
+  <div class="app-container">
+    <Navbar />
+      <UserInput />
+  </div>
+</template>
+
+<script setup>
+import Navbar from "@/components/Navbar.vue";
+import UserInput from '@/components/UserInput.vue';
+</script>
+
+<style scoped>
+.app-container {
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+</style>
