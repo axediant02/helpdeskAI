@@ -19,6 +19,7 @@ class UnansweredQuestionSeeder extends Seeder
             ['question' => 'What are the office hours of the registrar?', 'answer' => 'The office hours of the registrar are from 9am to 5pm.'],
             ['question' => 'Can I change my major after the first semester?', 'answer' => 'Yes, you can change your major after the first semester.'],
             ['question' => 'How do I access the college\'s online library resources?', 'answer' => 'You can access the college\'s online library resources through the college website.'],
+            ['question' => 'What is the deadline for course registration?', 'answer' => null],
         ]);
     }
 }
