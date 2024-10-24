@@ -4,15 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\UnansweredQuestions;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
 
 class UnansweredQuestionsController extends Controller
 {
     /**
-     * Get all unanswered questions.
+     * Get all unanswered questions with pagination.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $questions = UnansweredQuestions::all(); // Changed from UnansweredQuestion to UnansweredQuestions
+        $questions = UnansweredQuestions::paginate(10);
+
         return response()->json($questions, 200);
     }
 
