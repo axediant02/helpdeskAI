@@ -2,7 +2,7 @@
     <div>
         <nav class="w-full ">
             <div class="flex flex-col items-center justify-center p-4 bg-blue-400 shadow mx-auto">
-                <div class="flex flex-row items-center justify-between w-full mb-4">
+                <div class="flex flex-row items-center justify-between w-full">
                     <h1 class="text-4xl font-bold text-gray-800">Admin Panel</h1>
                     <SearchBar />
                     <div class="flex flex-row items-center">
