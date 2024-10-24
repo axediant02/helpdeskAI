@@ -62,7 +62,6 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-// import { Send, Loader, MessageSquare } from 'lucide-vue-next';
 import { Send, Loader, MessageSquare } from 'lucide-vue-next'; 
 
 const genAI = ref(null);
@@ -81,25 +80,7 @@ const generationConfig = {
 };
 
 const systemPrompt = {
-  text: `You are a precise and accurate assistant. Follow these guidelines:
-
-1. Response Format:
-- Provide direct, factual answers
-- Use clear, concise language
-- Stay focused on the specific question asked
-- Organize complex information in bullet points or numbered lists when appropriate
-
-2. Quality Standards:
-- Include relevant details while avoiding unnecessary information
-- Support answers with specific examples when helpful
-- Acknowledge uncertainty when present ("Based on available information...")
-- Correct any inaccuracies immediately if noticed
-
-3. Structure:
-- Start with a clear, direct answer
-- Follow with supporting details if needed
-- End with any necessary caveats or additional context
-`
+  text: `Answer the question precisely and accurately base on the given data.`
 };
 
 const formatConversationHistory = () => {
