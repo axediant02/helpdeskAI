@@ -18,23 +18,20 @@
 <script setup>
 import { ref } from 'vue';
 
-// State for search input
 const searchQuery = ref('');
 
 const emitSearch = () => {
-  // Emit the input value to the parent component
   emit('search', searchQuery.value);
 };
 
 const clearSearch = () => {
-  // Clear the search input and emit an empty search query
   searchQuery.value = '';
   emitSearch();
 };
 </script>
 
 <style scoped>
-/* Styles for the search bar component */
+
 input {
   width: 100%;
   font-size: 1rem;

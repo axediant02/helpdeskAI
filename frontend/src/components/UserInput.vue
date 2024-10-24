@@ -81,8 +81,26 @@ const generationConfig = {
 };
 
 const systemPrompt = {
-  text: `You are a virtual assistant for Consolatrix College of Toledo City (CCTC), responsible for answering questions from students using up-to-date school information. You have access to details like building locations, department contacts, event schedules, and FAQs, all provided by the school's administrators.Clarity & Accuracy: Ensure that your responses are clear, concise, and based on the most recent data. Always reference the latest information to ensure accuracy.Handling Unclear Queries: If a student’s question is vague or incomplete, kindly request more details to provide an accurate answer. For example: "Could you clarify which building or service you're referring to?"Unavailable Information: If you can't find the requested information in the provided data, politely inform the student: "This information is currently unavailable. Please check with the school office for further assistance."Out-of-Scope Questions: For questions unrelated to Consolatrix College, respond with: "I'm here to help with questions about Consolatrix College. It seems your query is outside my scope. Please contact the school office or check the website for more info. Let me know if you have any other questions!"Tone and Response Format: Maintain a friendly, professional, and approachable tone in all responses. Keep answers brief and simple, especially for students unfamiliar with school procedures. Example: "The library is located in the South Building, next to the cafeteria. It’s open from 8 AM to 5 PM, Monday to Friday."Missing or Outdated Data: If data is outdated or missing, inform the student politely: "I'm sorry, the information you're looking for is not available at the moment. Please contact the school office for assistance, or check back later after we've updated our system.",`
-  };
+  text: `You are a precise and accurate assistant. Follow these guidelines:
+
+1. Response Format:
+- Provide direct, factual answers
+- Use clear, concise language
+- Stay focused on the specific question asked
+- Organize complex information in bullet points or numbered lists when appropriate
+
+2. Quality Standards:
+- Include relevant details while avoiding unnecessary information
+- Support answers with specific examples when helpful
+- Acknowledge uncertainty when present ("Based on available information...")
+- Correct any inaccuracies immediately if noticed
+
+3. Structure:
+- Start with a clear, direct answer
+- Follow with supporting details if needed
+- End with any necessary caveats or additional context
+`
+};
 
 const formatConversationHistory = () => {
   return messages.value.slice(-6).map(msg => ({
@@ -145,8 +163,51 @@ const generateAnswer = async (question) => {
   const parts = [
     systemPrompt,
     ...history,
+    {text: "Answer the question precisely and accurately."},
     { text: `Student: ${question}` },
     { text: 'Assistant: ' },
+    { text: "input: Question" },
+    { text: "output: Answer" },
+    { text: "input: Where is the library located?" },
+    { text: "output: The library is located on the second floor of the main building, near the science labs." },
+    { text: "input: What time does the school day start?" },
+    { text: "output: The school day starts at 8:00 AM. Make sure to arrive a bit earlier to get settled before classes begin." },
+    { text: "input: Where can I find the cafeteria?" },
+    { text: "output: The cafeteria is on the ground floor, right next to the main entrance. It's open for breakfast and lunch." },
+    { text: "input: How can I get a locker?" },
+    { text: "output: You can get a locker by visiting the student services office. They will assign one to you and provide a key or combination." },
+    { text: "input: Where is the gymnasium?" },
+    { text: "output: The gymnasium is located on the west side of the campus, behind the main building. It’s next to the outdoor sports fields." },
+    { text: "input: What is the school’s policy on absences?" },
+    { text: "output: If you need to be absent, make sure to notify the school office and provide a note from a parent or guardian explaining the absence." },
+    { text: "input: Where are the art classrooms?" },
+    { text: "output: The art classrooms are located on the third floor, in the east wing of the main building." },
+    { text: "input: How do I contact a teacher?" },
+    { text: "output: You can contact your teacher via email or by visiting them during their office hours, which are posted on the classroom door." },
+    { text: "input: Where is the nurse’s office?" },
+    { text: "output: The nurse’s office is on the ground floor, near the main office. It's where you should go if you feel unwell during the school day." },
+    { text: "input: What is the procedure for dropping off a forgotten lunch?" },
+    { text: "output: Drop off forgotten lunches at the main office. They will ensure that your child receives it during lunch period." },
+    { text: "input: Where can I find the principal’s office?" },
+    { text: "output: The principal’s office is located in the administrative building, next to the main entrance." },
+    { text: "input: What is the school’s policy on cell phone use?" },
+    { text: "output: Cell phones should be turned off or on silent mode during class. They can be used during breaks and lunchtime." },
+    { text: "input: Where is the computer lab?" },
+    { text: "output: The computer lab is on the second floor, adjacent to the library. It’s available for student use during free periods." },
+    { text: "input: How do I sign up for extracurricular activities?" },
+    { text: "output: Sign up for extracurricular activities by visiting the activities coordinator’s office. You can also find information on the school’s website." },
+    { text: "input: What is the school’s dress code?" },
+    { text: "output: The dress code requires students to wear appropriate, non-revealing clothing. Specific guidelines are outlined in the student handbook." },
+    { text: "input: Where are the restrooms located?" },
+    { text: "output: Restrooms are available on every floor. They are marked with signs for easy identification." },
+    { text: "input: How do I get a student ID card?" },
+    { text: "output: Student ID cards are issued during the first week of school. Visit the student services office for more information." },
+    { text: "input: Where is the music room?" },
+    { text: "output: The music room is on the ground floor, near the auditorium. It’s where you can find the band and choir classes." },
+    { text: "input: What time does school end?" },
+    { text: "output: School ends at 3:00 PM. If you have after-school activities, make sure to check their specific end times." },
+    { text: "input: Where can I find information about school events?" },
+    { text: "output: Information about school events is posted on the school’s website and bulletin boards around the campus." },
   ];
 
   const result = await model.value.generateContent({
