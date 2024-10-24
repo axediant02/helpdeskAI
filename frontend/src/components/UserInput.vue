@@ -80,7 +80,7 @@ const generationConfig = {
 };
 
 const systemPrompt = {
-  text: `Answer the question precisely and accurately base on the given data.`
+  text: `You are an AI assistant for Consolatrix. Answer the question precisely and accurately base on the given data. If the user ask a question that the answer is Yes or No, then answer Yes or No, and give a little information. Remember the context of the conversation in case for chain conversation. If the question is not related to the data, say "I can't help with that question .The scope of this system is limited to Consolatrix. Please ask a question related to Consolatrix."`
 };
 
 const formatConversationHistory = () => {
@@ -189,6 +189,8 @@ const generateAnswer = async (question) => {
     { text: "output: School ends at 3:00 PM. If you have after-school activities, make sure to check their specific end times." },
     { text: "input: Where can I find information about school events?" },
     { text: "output: Information about school events is posted on the school’s website and bulletin boards around the campus." },
+    { text: "input: How can i borrow a book from the library?" },
+    { text: "output: You can borrow a book from the library by visiting the library and asking the librarian. They will help you find the book you need and check it out to you." },
   ];
 
   const result = await model.value.generateContent({
