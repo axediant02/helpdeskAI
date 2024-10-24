@@ -62,7 +62,9 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+
 import axios from 'axios'; // Add this line to import axios
+
 import { Send, Loader, MessageSquare } from 'lucide-vue-next'; 
 
 const genAI = ref(null);
@@ -81,25 +83,7 @@ const generationConfig = {
 };
 
 const systemPrompt = {
-  text: `You are a precise and accurate assistant. Follow these guidelines:
-
-1. Response Format:
-- Provide direct, factual answers
-- Use clear, concise language
-- Stay focused on the specific question asked
-- Organize complex information in bullet points or numbered lists when appropriate
-
-2. Quality Standards:
-- Include relevant details while avoiding unnecessary information
-- Support answers with specific examples when helpful
-- Acknowledge uncertainty when present ("Based on available information...")
-- Correct any inaccuracies immediately if noticed
-
-3. Structure:
-- Start with a clear, direct answer
-- Follow with supporting details if needed
-- End with any necessary caveats or additional context
-`
+  text: `You are an AI assistant for Consolatrix. Answer the question precisely and accurately base on the given data. If the user ask a question that the answer is Yes or No, then answer Yes or No, and give a little information. Remember the context of the conversation in case for chain conversation. If the question is not related to the data, say "I can't help with that question .The scope of this system is limited to Consolatrix. Please ask a question related to Consolatrix."`
 };
 
 const formatConversationHistory = () => {
@@ -166,7 +150,6 @@ const generateAnswer = async (question) => {
     { text: "Answer the question precisely and accurately." },
     { text: `Student: ${question}` },
     { text: 'Assistant: ' },
-  ];
 
   const response = await axios.get('/api/unanswered-questions'); 
   const data = response.data; // Use response.data directly
