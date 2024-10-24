@@ -39,12 +39,6 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex space-x-2">
-                <button @click="() => editItem(item)" class="text-blue-600 hover:text-blue-800 p-2 rounded-full bg-blue-100">
-                  <i class="mdi mdi-pencil"></i>
-                </button>
-                <button @click="() => deleteItem(item.id)" class="text-red-600 hover:text-red-800 p-2 rounded-full bg-red-100">
-                  <i class="mdi mdi-delete"></i>
-                </button>
                 <template v-if="editing && currentItemId === item.id">
                   <button @click="updateItem" class="text-green-600 hover:text-green-800 p-2 rounded-full bg-green-100">
                     <i class="mdi mdi-check"></i>
@@ -53,13 +47,15 @@
                     <i class="mdi mdi-close"></i>
                   </button>
                 </template>
+                <template v-else>
+                  <EditButton :item="item" @click.native="editItem(item)" :onEdit="() => editing = true" />
+                  <DeleteButton :itemId="item.id" :onDelete="deleteItem" />
+                </template>
               </div>
             </td>
           </tr>
         </tbody>
       </table>
-
-      <!-- Pagination Component -->
       <Pagination :currentPage="currentPage" :totalPages="totalPages" @updatePage="handlePageChange" />
     </div>
   </div>
@@ -68,8 +64,10 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-import ExportCSV from '@/components/ExportCSV.vue';
+import ExportCSV from '@/components/buttons/ExportCSV.vue';
 import Pagination from '@/components/Pagination.vue';
+import EditButton from '@/components/buttons/EditButton.vue';
+import DeleteButton from '@/components/buttons/DeleteButton.vue';
 import '@mdi/font/css/materialdesignicons.css';
 
 const isLoading = ref(true);
@@ -79,41 +77,34 @@ const editQuestion = ref('');
 const editAnswer = ref('');
 const editing = ref(false);
 
-// Pagination variables
 const currentPage = ref(1);
-const itemsPerPage = ref(5); // Adjust this value based on how many items you want per page.
+const itemsPerPage = ref(5);
 const totalItems = ref(0);
 
-// Fetch questions with pagination
 const fetchData = async () => {
   try {
     const response = await axios.get('/api/unanswered-questions', {
       params: {
-        page: currentPage.value, // Ensure this is being sent correctly
-        limit: itemsPerPage.value, // Ensure this is being sent correctly
+        page: currentPage.value,
+        limit: itemsPerPage.value,
       },
     });
-    // Check the structure of the response
-    console.log(response.data); // Debugging line
-    questions.value = response.data.data; // Ensure this exists in the response
-    totalItems.value = response.data.total; // Ensure this exists in the response
+    questions.value = response.data.data;
+    totalItems.value = response.data.total;
   } catch (error) {
     console.error('Error fetching data:', error);
   } finally {
-    isLoading.value = false; // Ensure loading state is updated
+    isLoading.value = false;
   }
 };
 
-// Computed property to calculate total pages
 const totalPages = computed(() => Math.ceil(totalItems.value / itemsPerPage.value));
 
-// Handle page change event
 const handlePageChange = (newPage) => {
   currentPage.value = newPage;
   fetchData();
 };
 
-// Update item
 const updateItem = async () => {
   if (editQuestion.value && editAnswer.value) {
     try {
@@ -121,8 +112,8 @@ const updateItem = async () => {
         question: editQuestion.value,
         answer: editAnswer.value,
       });
-      editing.value = false;
-      await fetchData();
+      editing.value = false; // Exit edit mode
+      await fetchData(); // Refresh the data
     } catch (error) {
       console.error('Error updating item:', error);
     }
@@ -132,7 +123,9 @@ const updateItem = async () => {
 };
 
 const cancelEdit = () => {
-  editing.value = false;
+  editing.value = false; // Exit edit mode without saving changes
+  editQuestion.value = ''; // Clear the edit fields
+  editAnswer.value = '';
 };
 
 const deleteItem = async (id) => {
@@ -148,7 +141,7 @@ const editItem = (item) => {
   currentItemId.value = item.id;
   editQuestion.value = item.question;
   editAnswer.value = item.answer;
-  editing.value = true;
+  editing.value = true; // Enter edit mode
 };
 
 onMounted(() => {
