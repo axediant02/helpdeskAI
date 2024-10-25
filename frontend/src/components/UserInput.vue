@@ -16,16 +16,12 @@
             <div
               v-for="(message, index) in messages"
               :key="index"
-              :class="[
-                'max-w-[80%] p-3 rounded-lg transition-all duration-300',
-                message.type === 'user' ? 'ml-auto bg-blue-500 text-white' : 'bg-gray-100 text-gray-800',
-                {'opacity-50': isLoading && index === messages.length - 1}
-              ]"
+              :class="getMessageClass(message.type, index)"
             >
               <div class="flex items-center space-x-2 mb-1">
                 <span class="text-sm font-medium">{{ message.type === 'user' ? 'You' : 'AI Assistant' }}</span>
                 <span v-if="message.type === 'ai'" class="text-xs text-gray-500">
-                  {{ getTimestamp(message.timestamp) }}
+                  {{ formatTimestamp(message.timestamp) }}
                 </span>
               </div>
               <div class="text-sm">{{ message.text }}</div>
@@ -62,10 +58,8 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-
-import axios from 'axios'; // Add this line to import axios
-
-import { Send, Loader, MessageSquare } from 'lucide-vue-next'; 
+import axios from 'axios';
+import { Send, Loader, MessageSquare } from 'lucide-vue-next';
 
 const genAI = ref(null);
 const model = ref(null);
@@ -73,7 +67,6 @@ const userInput = ref('');
 const messages = ref([]);
 const chatContainer = ref(null);
 const isLoading = ref(false);
-const conversationHistory = ref([]);
 
 const generationConfig = {
   temperature: 0.7,
@@ -83,34 +76,33 @@ const generationConfig = {
 };
 
 const systemPrompt = {
-  text: `You are an AI assistant for Consolatrix. Answer the question precisely and accurately base on the given data. If the user ask a question that the answer is Yes or No, then answer Yes or No, and give a little information. Remember the context of the conversation in case for chain conversation. If the question is not related to the data, say "I can't help with that question .The scope of this system is limited to Consolatrix. Please ask a question related to Consolatrix."`
+  text: `You are a friendly AI assistant for Consolatrix, your name is Ezhack. Answer the question precisely and accurately base on the given data. If the user ask a question that the answer is Yes or No, then answer Yes or No, and give a little information. Remember the context of the conversation in case for chain conversation. If the question is not related to the data, say "I can't help with that question .The scope of this system is limited to Consolatrix. Please ask a question related to Consolatrix."`
 };
 
-const formatConversationHistory = () => {
-  return messages.value.slice(-6).map(msg => ({
-    text: `${msg.type === 'user' ? 'Student' : 'Assistant'}: ${msg.text}`
-  }));
-};
-
-const getTimestamp = (timestamp) => {
+const formatTimestamp = (timestamp) => {
   if (!timestamp) return '';
   const now = new Date();
   const msgTime = new Date(timestamp);
-  
-  if (now.toDateString() === msgTime.toDateString()) {
-    return msgTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
-  return msgTime.toLocaleDateString();
+  return now.toDateString() === msgTime.toDateString()
+    ? msgTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    : msgTime.toLocaleDateString();
+};
+
+const getMessageClass = (type, index) => {
+  return [
+    'max-w-[80%] p-3 rounded-lg transition-all duration-300',
+    type === 'user' ? 'ml-auto bg-blue-500 text-white' : 'bg-gray-100 text-gray-800',
+    { 'opacity-50': isLoading.value && index === messages.value.length - 1 },
+  ];
 };
 
 const sendMessage = async () => {
   if (!userInput.value.trim() || isLoading.value) return;
-
-  const currentTime = new Date().toISOString();
-  messages.value.push({ 
-    type: 'user', 
+  
+  messages.value.push({
+    type: 'user',
     text: userInput.value,
-    timestamp: currentTime
+    timestamp: new Date().toISOString()
   });
   
   const question = userInput.value;
@@ -118,16 +110,16 @@ const sendMessage = async () => {
   isLoading.value = true;
 
   try {
-    const answer = await generateAnswer(question);
-    messages.value.push({ 
-      type: 'ai', 
+    const answer = await fetchAnswer(question);
+    messages.value.push({
+      type: 'ai',
       text: answer,
       timestamp: new Date().toISOString()
     });
   } catch (error) {
     console.error('Error generating answer:', error);
-    messages.value.push({ 
-      type: 'ai', 
+    messages.value.push({
+      type: 'ai',
       text: 'Sorry, there was an error generating the answer. Please try again later.',
       timestamp: new Date().toISOString()
     });
@@ -135,32 +127,27 @@ const sendMessage = async () => {
     isLoading.value = false;
   }
 
-  nextTick(() => {
-    scrollToBottom();
-  });
+  scrollToBottom();
 };
 
-const generateAnswer = async (question) => {
-  const history = formatConversationHistory();
+const fetchAnswer = async (question) => {
+  const history = messages.value.slice(-6).map(msg => ({
+    text: `${msg.type === 'user' ? 'Student' : 'Assistant'}: ${msg.text}`
+  }));
 
-  // Define parts here
-  const parts = [
+  const response = await axios.get('/api/unanswered-questions');
+  const data = response.data;
+  const conversationParts = [
     systemPrompt,
     ...history,
     { text: "Answer the question precisely and accurately." },
     { text: `Student: ${question}` },
     { text: 'Assistant: ' },
-
-  const response = await axios.get('/api/unanswered-questions'); 
-  const data = response.data; // Use response.data directly
-
-  data.forEach(item => {
-    parts.push({ text: `input: ${item.question}` });
-    parts.push({ text: `output: ${item.answer}` });
-  });
+    ...data.flatMap(item => [{ text: `input: ${item.question}` }, { text: `output: ${item.answer}` }])
+  ];
 
   const result = await model.value.generateContent({
-    contents: [{ role: 'user', parts }],
+    contents: [{ role: 'user', parts: conversationParts }],
     generationConfig,
   });
 
@@ -168,8 +155,9 @@ const generateAnswer = async (question) => {
 };
 
 const scrollToBottom = () => {
-  const container = chatContainer.value;
-  container.scrollTop = container.scrollHeight;
+  nextTick(() => {
+    chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+  });
 };
 
 onMounted(() => {
@@ -178,10 +166,5 @@ onMounted(() => {
   model.value = genAI.value.getGenerativeModel({ model: 'gemini-1.5-pro' });
 });
 
-watch(messages, () => {
-  nextTick(() => {
-    scrollToBottom();
-  });
-});
+watch(messages, scrollToBottom);
 </script>
-
