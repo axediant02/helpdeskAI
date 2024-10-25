@@ -140,7 +140,7 @@ const fetchAnswer = async (question) => {
   const conversationParts = [
     systemPrompt,
     ...history,
-    { text: "Answer the question precisely and accurately." },
+    {text: "Answer the question precisely and accurately."},
     { text: `Student: ${question}` },
     { text: 'Assistant: ' },
     ...data.flatMap(item => [{ text: `input: ${item.question}` }, { text: `output: ${item.answer}` }])
