@@ -12,9 +12,25 @@
       </div>
       <div class="p-6">
         <div ref="chatContainer" class="h-[400px] overflow-y-auto mb-6 space-y-4">
-          <div class="text-center text-gray-500">
+          <template v-if="messages.length">
+            <div
+              v-for="(message, index) in messages"
+              :key="index"
+              :class="getMessageClass(message.type)"
+            >
+              <div class="flex items-center space-x-2 mb-1">
+                <span class="text-sm font-medium">{{ message.type === 'user' ? 'You' : 'AI Assistant' }}</span>
+                <span v-if="message.type === 'ai'" class="text-xs text-gray-500">
+                  {{ formatTimestamp(message.timestamp) }}
+                </span>
+              </div>
+              <div class="text-sm">{{ message.text }}</div>
+            </div>
+          </template>
+          <div v-else class="text-center text-gray-500">
             <MessageSquare class="w-16 h-16 mx-auto mb-4 text-gray-400" />
-            <p class="text-lg font-medium">No messages to display</p>
+            <p class="text-lg font-medium">No messages yet</p>
+            <p class="text-sm">Start a conversation by asking a question!</p>
           </div>
         </div>
         <div class="flex items-center space-x-2">
@@ -49,6 +65,7 @@ const model = ref(null);
 const userInput = ref('');
 const chatContainer = ref(null);
 const isLoading = ref(false);
+const messages = ref([]);
 
 const generationConfig = {
   temperature: 0.7,
@@ -58,7 +75,20 @@ const generationConfig = {
 };
 
 const systemPrompt = {
-  text: `You are a friendly AI assistant for Consolatrix, your name is Ezhack. Answer the question precisely and accurately base on the given data. If the user ask a question that the answer is Yes or No, then answer Yes or No, and give a little information. Remember the context of the conversation in case for chain conversation. If the question is not related to the data, say "I can't help with that question. The scope of this system is limited to Consolatrix. Please ask a question related to Consolatrix."`
+  text: `You are a friendly AI assistant for Consolatrix, your name is Ezhack. Answer the question precisely and accurately based on the given data. If the user asks a question that the answer is Yes or No, then answer Yes or No, and give a little information. Remember the context of the conversation for chain conversation. If the question is not related to the data, say "I can't help with that question. The scope of this system is limited to Consolatrix. Please ask a question related to Consolatrix."`
+};
+
+const formatTimestamp = (timestamp) => {
+  const msgTime = new Date(timestamp);
+  return msgTime.toLocaleDateString() === new Date().toLocaleDateString()
+    ? msgTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    : msgTime.toLocaleDateString();
+};
+
+const getMessageClass = (type) => {
+  return type === 'user' 
+    ? 'max-w-[80%] p-3 ml-auto bg-blue-500 text-white rounded-lg' 
+    : 'max-w-[80%] p-3 bg-gray-100 text-gray-800 rounded-lg';
 };
 
 // Handles sending a message from the user to the AI
@@ -66,19 +96,43 @@ const sendMessage = async () => {
   if (!userInput.value.trim() || isLoading.value) return;
 
   const question = userInput.value;
-  userInput.value = '';
+  const timestamp = new Date().toISOString();
+
+  // Add user message to the chat immediately
+  messages.value.push({
+    type: 'user',
+    text: question,
+    timestamp,
+  });
+
+  userInput.value = ''; // Clear user input after sending
   isLoading.value = true;
 
   try {
     const answer = await fetchAnswer(question);
     console.log('Answer generated successfully:', answer);
+    
+    // Add AI response to the chat after a short delay to simulate processing time
+    setTimeout(() => {
+      messages.value.push({
+        type: 'ai',
+        text: answer || 'Sorry, I could not find an answer to your question.',
+        timestamp: new Date().toISOString(),
+      });
+      scrollToBottom(); // Ensure the chat scrolls to the latest message
+    }, 1000); // Simulate processing time
+
   } catch (error) {
     console.error('Error generating answer:', error);
+    messages.value.push({
+      type: 'ai',
+      text: 'Sorry, there was an error generating an answer.',
+      timestamp,
+    });
   } finally {
     isLoading.value = false;
+    scrollToBottom(); // Ensure the chat scrolls to the latest message
   }
-
-  scrollToBottom();
 };
 
 // Generates an answer to a user's question using the AI model
@@ -130,16 +184,21 @@ const generateAnswer = async (question) => {
     { text: "output: School ends at 3:00 PM. If you have after-school activities, make sure to check their specific end times." },
     { text: "input: Where can I find information about school events?" },
     { text: "output: Information about school events is posted on the school’s website and bulletin boards around the campus." },
-    { text: "input: Who is the principal?" },
-    { text: "output: Mr Yoso is the principal." }
+    // { text: "input: Who is the principal?" },
+    // { text: "output: Mr Yoso is the principal." }
   ];
 
-  const result = await model.value.generateContent({
-    contents: [{ role: 'user', parts }],
-    generationConfig,
-  });
+  try {
+    const result = await model.value.generateContent({
+      contents: [{ role: 'user', parts }],
+      generationConfig,
+    });
 
-  return result.response.text();
+    return result.response.text();
+  } catch (error) {
+    console.error('Error in generateAnswer:', error);
+    throw error;
+  }
 };
 
 // Fetches an answer from the AI model for a given question
