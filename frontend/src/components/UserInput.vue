@@ -16,12 +16,16 @@
             <div
               v-for="(message, index) in messages"
               :key="index"
-              :class="getMessageClass(message.type)"
+              :class="[ 
+                'max-w-[80%] p-3 rounded-lg transition-all duration-300',
+                message.type === 'user' ? 'ml-auto bg-blue-500 text-white' : 'bg-gray-100 text-gray-800',
+                { 'opacity-50': isLoading && index === messages.length - 1 }
+              ]"
             >
               <div class="flex items-center space-x-2 mb-1">
                 <span class="text-sm font-medium">{{ message.type === 'user' ? 'You' : 'AI Assistant' }}</span>
                 <span v-if="message.type === 'ai'" class="text-xs text-gray-500">
-                  {{ formatTimestamp(message.timestamp) }}
+                  {{ getTimestamp(message.timestamp) }}
                 </span>
               </div>
               <div class="text-sm">{{ message.text }}</div>
@@ -56,16 +60,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick, watch } from 'vue';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { Send, Loader, MessageSquare } from 'lucide-vue-next';
+import { Send, Loader, MessageSquare } from 'lucide-vue-next'; 
 
 const genAI = ref(null);
 const model = ref(null);
 const userInput = ref('');
+const messages = ref([]);
 const chatContainer = ref(null);
 const isLoading = ref(false);
-const messages = ref([]);
 
 const generationConfig = {
   temperature: 0.7,
@@ -75,67 +79,59 @@ const generationConfig = {
 };
 
 const systemPrompt = {
-  text: `You are a friendly AI assistant for Consolatrix, your name is Ezhack. Answer the question precisely and accurately based on the given data. If the user asks a question that the answer is Yes or No, then answer Yes or No, and give a little information. Remember the context of the conversation for chain conversation. If the question is not related to the data, say "I can't help with that question. The scope of this system is limited to Consolatrix. Please ask a question related to Consolatrix."`
+  text: `You are a friendly AI assistant for Consolatrix, your name is Ezhack. Answer the question precisely and accurately base on the given data. If the user ask a question that the answer is Yes or No, then answer Yes or No, and give a little information. Remember the context of the conversation in case for chain conversation. If the question is not related to the data, say "I can't help with that question .The scope of this system is limited to Consolatrix. Please ask a question related to Consolatrix."`
 };
 
-const formatTimestamp = (timestamp) => {
+const formatConversationHistory = () => {
+  return messages.value.slice(-6).map(msg => ({
+    text: `${msg.type === 'user' ? 'Student' : 'Assistant'}: ${msg.text}`
+  }));
+};
+
+const getTimestamp = (timestamp) => {
+  if (!timestamp) return '';
+  const now = new Date();
   const msgTime = new Date(timestamp);
-  return msgTime.toLocaleDateString() === new Date().toLocaleDateString()
-    ? msgTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  
+  return now.toDateString() === msgTime.toDateString() 
+    ? msgTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
     : msgTime.toLocaleDateString();
 };
 
-const getMessageClass = (type) => {
-  return type === 'user' 
-    ? 'max-w-[80%] p-3 ml-auto bg-blue-500 text-white rounded-lg' 
-    : 'max-w-[80%] p-3 bg-gray-100 text-gray-800 rounded-lg';
-};
-
-// Handles sending a message from the user to the AI
 const sendMessage = async () => {
   if (!userInput.value.trim() || isLoading.value) return;
 
-  const question = userInput.value;
-  const timestamp = new Date().toISOString();
-
-  // Add user message to the chat immediately
-  messages.value.push({
-    type: 'user',
-    text: question,
-    timestamp,
+  const currentTime = new Date().toISOString();
+  messages.value.push({ 
+    type: 'user', 
+    text: userInput.value,
+    timestamp: currentTime
   });
 
-  userInput.value = ''; // Clear user input after sending
+  const question = userInput.value;
+  userInput.value = '';
   isLoading.value = true;
 
   try {
-    const answer = await fetchAnswer(question);
-    console.log('Answer generated successfully:', answer);
-    
-    // Add AI response to the chat after a short delay to simulate processing time
-    setTimeout(() => {
-      messages.value.push({
-        type: 'ai',
-        text: answer || 'Sorry, I could not find an answer to your question.',
-        timestamp: new Date().toISOString(),
-      });
-      scrollToBottom(); // Ensure the chat scrolls to the latest message
-    }, 1000); // Simulate processing time
-
+    const answer = await generateAnswer(question);
+    messages.value.push({ 
+      type: 'ai', 
+      text: answer,
+      timestamp: new Date().toISOString()
+    });
   } catch (error) {
     console.error('Error generating answer:', error);
-    messages.value.push({
-      type: 'ai',
-      text: 'Sorry, there was an error generating an answer.',
-      timestamp,
+    messages.value.push({ 
+      type: 'ai', 
+      text: 'Sorry, there was an error generating the answer. Please try again later.',
+      timestamp: new Date().toISOString()
     });
   } finally {
     isLoading.value = false;
-    scrollToBottom(); // Ensure the chat scrolls to the latest message
+    nextTick(() => scrollToBottom());
   }
 };
 
-// Generates an answer to a user's question using the AI model
 const generateAnswer = async (question) => {
   const parts = [
     systemPrompt,
@@ -188,34 +184,28 @@ const generateAnswer = async (question) => {
     // { text: "output: Mr Yoso is the principal." }
   ];
 
-  try {
-    const result = await model.value.generateContent({
-      contents: [{ role: 'user', parts }],
-      generationConfig,
-    });
-
-    return result.response.text();
-  } catch (error) {
-    console.error('Error in generateAnswer:', error);
-    throw error;
-  }
-};
-
-// Fetches an answer from the AI model for a given question
-const fetchAnswer = async (question) => {
-  return await generateAnswer(question);
-};
-
-// Scrolls the chat container to the bottom after a new message is added
-const scrollToBottom = () => {
-  nextTick(() => {
-    chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+  const result = await model.value.generateContent({
+    contents: [{ role: 'user', parts }],
+    generationConfig,
   });
+
+  return result.response.text();
+};
+
+const scrollToBottom = () => {
+  const container = chatContainer.value;
+  container.scrollTop = container.scrollHeight;
 };
 
 onMounted(() => {
   const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
   genAI.value = new GoogleGenerativeAI(API_KEY);
   model.value = genAI.value.getGenerativeModel({ model: 'gemini-1.5-pro' });
+});
+
+watch(messages, () => {
+  nextTick(() => {
+    scrollToBottom();
+  });
 });
 </script>
