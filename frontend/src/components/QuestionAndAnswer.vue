@@ -10,37 +10,31 @@
       <table class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
         <thead class="bg-gray-50">
           <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">ID</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Question</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Answer</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Actions</th>
+            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">ID</th>
+            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Question</th>
+            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Answer</th>
+            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Actions</th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-for="(item, index) in questions" :key="index" class="hover:bg-gray-50" :class="{'bg-gray-100': index % 2 === 0}">
+          <tr v-for="(item, index) in questions" :key="item.id" class="hover:bg-gray-50" :class="{'bg-gray-100': index % 2 === 0}">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.id }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              {{ item.id }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              <template v-if="editing && currentItemId === item.id">
+              <template v-if="isEditing(item.id)">
                 <textarea v-model="editQuestion" class="border rounded w-full p-2" rows="3"></textarea>
               </template>
-              <template v-else>
-                {{ item.question }}
-              </template>
+              <template v-else>{{ item.question }}</template>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              <template v-if="editing && currentItemId === item.id">
+              <template v-if="isEditing(item.id)">
                 <textarea v-model="editAnswer" class="border rounded w-full p-2" rows="3"></textarea>
               </template>
-              <template v-else>
-                {{ item.answer }}
-              </template>
+              <template v-else>{{ item.answer }}</template>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex space-x-2">
-                <template v-if="editing && currentItemId === item.id">
-                  <button @click="updateItem" class="text-green-600 hover:text-green-800 p-2 rounded-full bg-green-100">
+                <template v-if="isEditing(item.id)">
+                  <button @click="saveEdit" class="text-green-600 hover:text-green-800 p-2 rounded-full bg-green-100">
                     <i class="mdi mdi-check"></i>
                   </button>
                   <button @click="cancelEdit" class="text-gray-600 hover:text-gray-800 p-2 rounded-full bg-gray-100">
@@ -48,7 +42,7 @@
                   </button>
                 </template>
                 <template v-else>
-                  <EditButton :item="item" @click.native="editItem(item)" :onEdit="() => editing = true" />
+                  <EditButton :item="item" @click.native="startEdit(item)" :onEdit="saveEdit" />
                   <DeleteButton :itemId="item.id" :onDelete="deleteItem" />
                 </template>
               </div>
@@ -56,13 +50,13 @@
           </tr>
         </tbody>
       </table>
-      <Pagination :currentPage="currentPage" :totalPages="totalPages" @updatePage="handlePageChange" />
+      <Pagination :currentPage="currentPage" :totalPages="totalPages" @updatePage="currentPage = $event" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import axios from 'axios';
 import ExportCSV from '@/components/buttons/ExportCSV.vue';
 import Pagination from '@/components/Pagination.vue';
@@ -82,12 +76,10 @@ const itemsPerPage = ref(5);
 const totalItems = ref(0);
 
 const fetchData = async () => {
+  isLoading.value = true;
   try {
     const response = await axios.get('/api/unanswered-questions', {
-      params: {
-        page: currentPage.value,
-        limit: itemsPerPage.value,
-      },
+      params: { page: currentPage.value, limit: itemsPerPage.value },
     });
     questions.value = response.data.data;
     totalItems.value = response.data.total;
@@ -100,33 +92,41 @@ const fetchData = async () => {
 
 const totalPages = computed(() => Math.ceil(totalItems.value / itemsPerPage.value));
 
-const handlePageChange = (newPage) => {
-  currentPage.value = newPage;
-  fetchData();
+watch(currentPage, fetchData);
+
+const isEditing = (id) => editing.value && currentItemId.value === id;
+
+const startEdit = (item) => {
+  currentItemId.value = item.id;
+  editQuestion.value = item.question;
+  editAnswer.value = item.answer;
+  editing.value = true;
 };
 
-const updateItem = async () => {
-  if (editQuestion.value && editAnswer.value) {
-    try {
-      await axios.put(`/api/unanswered-questions/${currentItemId.value}`, {
-        question: editQuestion.value,
-        answer: editAnswer.value,
-      });
-      editing.value = false; // Exit edit mode
-      await fetchData(); // Refresh the data
-    } catch (error) {
-      console.error('Error updating item:', error);
-    }
-  } else {
+const saveEdit = async () => {
+  if (!editQuestion.value || !editAnswer.value) {
     console.error('Question and answer cannot be empty');
+    return;
+  }
+  try {
+    await axios.put(`/api/unanswered-questions/${currentItemId.value}`, {
+      question: editQuestion.value,
+      answer: editAnswer.value,
+    });
+    resetEdit();
+    await fetchData();
+  } catch (error) {
+    console.error('Error updating item:', error);
   }
 };
 
-const cancelEdit = () => {
-  editing.value = false; // Exit edit mode without saving changes
-  editQuestion.value = ''; // Clear the edit fields
+const cancelEdit = resetEdit;
+
+function resetEdit() {
+  editing.value = false;
+  editQuestion.value = '';
   editAnswer.value = '';
-};
+}
 
 const deleteItem = async (id) => {
   try {
@@ -137,18 +137,8 @@ const deleteItem = async (id) => {
   }
 };
 
-const editItem = (item) => {
-  currentItemId.value = item.id;
-  editQuestion.value = item.question;
-  editAnswer.value = item.answer;
-  editing.value = true; // Enter edit mode
-};
-
-onMounted(() => {
-  fetchData();
-});
+onMounted(fetchData);
 </script>
 
 <style scoped>
-
 </style>

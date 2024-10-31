@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-    <div class="w-full max-w-2xl bg-white rounded-xl shadow-xl overflow-hidden">
+  <div class="h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div class="w-screen max-w-2xl bg-white rounded-xl shadow-xl overflow-hidden">
       <div class="p-6 bg-gradient-to-r from-blue-600 to-blue-800">
         <h1 class="text-2xl md:text-3xl font-bold text-white text-center">Help Desk System</h1>
         <div class="flex justify-center mt-2">
@@ -79,7 +79,7 @@ const generationConfig = {
 };
 
 const systemPrompt = {
-  text: `You are a friendly AI assistant for Consolatrix, your name is Ezhack. Answer the question precisely and accurately base on the given data. If the user ask a question that the answer is Yes or No, then answer Yes or No, and give a little information. Remember the context of the conversation in case for chain conversation. If the question is not related to the data, say "I can't help with that question .The scope of this system is limited to Consolatrix. Please ask a question related to Consolatrix."`
+  text: `You are a friendly AI assistant for Consolatrix, your name is Ezhack. Answer the question precisely and accurately base on the given data. If the user ask a question that the answer is Yes or No, then answer Yes or No, and give a little information. Remember the context of the conversation in case for chain conversation. If the question does not have data on the system for response, respond with "I dont have information about that for now, please wait for the next update". If the question is not related to the data, say "I can't help with that question .The scope of this system is limited to Consolatrix. Please ask a question related to Consolatrix."`
 };
 
 const formatConversationHistory = () => {
