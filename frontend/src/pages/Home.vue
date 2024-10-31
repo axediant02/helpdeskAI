@@ -1,9 +1,9 @@
 <template>
   <div class="app-container bg-gray-100 flex flex-col h-screen">
     <Navbar />
-      <div class="history-container flex-3 overflow-y-auto p-16 border-r border-gray-300">
+      <!-- <div class="history-container flex-3 overflow-y-auto p-16 border-r border-gray-300">
         <History :messages="messages" :isLoading="isLoading" />
-      </div>
+      </div> -->
         <UserInput @sendMessage="sendMessage" :isLoading="isLoading" />
   </div>
 </template>
