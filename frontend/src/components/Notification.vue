@@ -3,7 +3,6 @@
       <button @click="toggleDropdown" class="flex items-center p-2 text-white rounded-full focus:outline-none hover:bg-blue-700 transition duration-300">
         <i class="mdi mdi-bell"></i>
   
-        <!-- Show unread notification count if greater than 0 -->
         <span v-if="unreadCount > 0" class="absolute top-0 right-0 bg-red-500 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
           {{ unreadCount }}
         </span>
@@ -32,7 +31,6 @@ import '@mdi/font/css/materialdesignicons.css';
   </script>
   
   <style scoped>
-  /* Button and notification count styles */
   button {
     position: relative;
     transition: background-color 0.3s ease-in-out;
