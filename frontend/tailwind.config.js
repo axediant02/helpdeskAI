@@ -5,8 +5,23 @@ export default {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        royalBlue: '#4169E1',
+        lightRoyalBlue: '#6372D2',
+        darkRoyalBlue: '#003DA5',
+        buttonColor: '#4169E1',
+        buttonHover: '#3456A0',
+        navbarBackground: '#001F3F',
+        navbarText: '#FFFFFF',
+        inputBorder: '#A1C6EA',
+        inputFocus: '#4169E1',
+        placeholderText: '#B0C4DE',
+        error: '#FF4C4C',
+        success: '#28A745',
+        background: '#F8F9FA',
+      },
+    },
   },
   plugins: [],
-}
-
+};

@@ -1,7 +1,12 @@
 <template>
   <div class="h-screen bg-gray-100 flex items-center justify-center p-0">
-    <div class="h-full w-full bg-white shadow-xl overflow-hidden relative">
-      <div class="flex flex-col justify-center items-center p-6 bg-gradient-to-r h-20 from-blue-600 to-blue-800">
+    <div class="h-full w-full shadow-xl overflow-hidden relative bg-royalBlue">
+      <div class="flex flex-col justify-center items-center p-6 bg-gradient-to-r h-20 from-lightRoyalBlue to-darkRoyalBlue">
+        <div class="flex flex-row justify-between items-center w-full">
+          <div class="flex justify-start">
+            <History class="flex justify-start" />
+          </div>
+        </div>
         <h1 class="text-2xl md:text-3xl font-bold text-white text-center">Welcome to the Help Desk System</h1>
         <div class="flex justify-center mt-2">
           <span class="text-sm text-blue-100">
@@ -18,7 +23,7 @@
               :key="index"
               :class="[ 
                 'max-w-[80%] p-3 rounded-lg transition-all duration-300',
-                message.type === 'user' ? 'ml-auto bg-blue-500 text-white' : 'bg-gray-100 text-gray-800',
+                message.type === 'user' ? 'ml-auto bg-lightRoyalBlue text-white' : 'bg-gray-100 text-gray-800',
                 { 'opacity-50': isLoading && index === messages.length - 1 }
               ]"
             >
@@ -31,25 +36,27 @@
               <div class="text-sm">{{ message.text }}</div>
             </div>
           </template>
-          <div v-else class="text-center text-gray-500 flex flex-col items-center justify-center h-full">
+          <div v-else class="text-center flex flex-col items-center justify-center h-full">
             <MessageSquare class="w-16 h-16 mx-auto mb-4 text-gray-400" />
             <p class="text-lg font-medium">No messages yet</p>
             <p class="text-sm">Start a conversation by asking a question!</p>
           </div>
         </div>
         <div class="flex justify-center absolute bottom-10 w-full">
-          <div class="flex flex-row items-center space-x-2 w-1/2 h-12">
+          <div class="flex flex-row items-center space-x-2 w-1/2 h-12 bg-lightRoyalBlue rounded-full">
             <input
               v-model="userInput"
               @keyup.enter="sendMessage"
-              placeholder="Continue the conversation..."
-              class="flex-grow border-2 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
+              placeholder="Ask the System..."
+              class="flex-grow border-2 border-lightRoyalBlue rounded-full focus:outline-none focus:ring-2 focus:ring-royalBlue transition duration-200 ease-in-out bg-lightRoyalBlue"
               :disabled="isLoading"
+              style="margin-left: 10px;"
             />
             <button
               @click="sendMessage"
-              class="bg-blue-500 text-white w-10 h-10 p-2 rounded-full flex items-center justify-center hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+              class="bg-darkRoyalBlue text-white w-10 h-10 p-2 rounded-full flex items-center justify-center hover:bg-lightRoyalBlue focus:outline-none focus:ring-2 focus:ring-royalBlue transition-colors duration-200"
               :disabled="isLoading"
+              style="margin-right: 10px;"
             >
               <Send v-if="!isLoading" class="w-5 h-5" />
               <Loader v-else class="w-5 h-5 animate-spin" />
@@ -73,6 +80,7 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import History from './History.vue';
 import { Send, Loader, MessageSquare } from 'lucide-vue-next'; 
 
 const genAI = ref(null);
