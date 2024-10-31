@@ -20,8 +20,7 @@ const isLoading = ref(false);
 
 const sendMessage = async (messageText) => {
   isLoading.value = true;
-  // Assuming there's a function to send the message and update the messages array
-  // This is a placeholder for the actual logic
+
   await new Promise(resolve => setTimeout(resolve, 1000));
   messages.value.push(messageText);
   isLoading.value = false;
