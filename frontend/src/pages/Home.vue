@@ -1,19 +1,15 @@
 <template>
   <div class="app-container bg-gray-100 flex flex-col h-screen">
     <Navbar />
-      <div class="history-container flex-3 overflow-y-auto p-16 border-r border-gray-300">
-        <History :messages="messages" :isLoading="isLoading" />
-      </div>
-        <UserInput @sendMessage="sendMessage" :isLoading="isLoading" />
+    <UserInput @sendMessage="sendMessage" :isLoading="isLoading" />
   </div>
 </template>
 
 <script setup>
 import Navbar from "@/components/Navbar.vue";
-import History from "@/components/History.vue";
 import UserInput from "@/components/UserInput.vue";
 
-import { ref, onMounted, nextTick } from 'vue';
+import { ref } from 'vue';
 
 const messages = ref([]);
 const isLoading = ref(false);
