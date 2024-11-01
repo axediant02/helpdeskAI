@@ -20,6 +20,7 @@ export default {
         error: '#FF4C4C',
         success: '#28A745',
         background: '#F8F9FA',
+        chatBG: '#A7C8FF'
       },
     },
   },

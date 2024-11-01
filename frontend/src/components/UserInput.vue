@@ -1,66 +1,74 @@
 <template>
-  <div class="h-screen bg-gray-100 flex items-center justify-center p-0">
-    <div class="h-full w-full shadow-xl overflow-hidden relative bg-royalBlue">
-      <div class="flex flex-col justify-center items-center p-6 bg-gradient-to-r h-20 from-lightRoyalBlue to-darkRoyalBlue">
-        <div class="flex flex-row justify-between items-center w-full">
-          <div class="flex justify-start">
-            <History class="flex justify-start" />
+  <div class="h-screen bg-gray-100 flex">
+    <ChatHistory v-if="showHistory" :messages="messages" />
+    <div class="flex-grow flex items-center justify-center p-0">
+      <div class="h-full w-full shadow-xl overflow-hidden relative bg-royalBlue">
+        <div class="flex items-center p-6 bg-gradient-to-r h-20 from-lightRoyalBlue to-darkRoyalBlue relative">
+          <!-- Left-aligned Toggle History Button -->
+          <div class="mr-auto">
+            <ToggleHistoryButton :showHistory="showHistory" :toggleHistory="toggleHistory" />
           </div>
-        </div>
-        <h1 class="text-2xl md:text-3xl font-bold text-white text-center">Welcome to the Help Desk System</h1>
-        <div class="flex justify-center mt-2">
-          <span class="text-sm text-blue-100">
-            <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-            Conversation Mode Active
-          </span>
-        </div>
-      </div>
-      <div class="p-6">
-        <div ref="chatContainer" class="h-[400px] overflow-y-auto mb-6 space-y-4">
-          <template v-if="messages.length">
-            <div
-              v-for="(message, index) in messages"
-              :key="index"
-              :class="[ 
-                'max-w-[80%] p-3 rounded-lg transition-all duration-300',
-                message.type === 'user' ? 'ml-auto bg-lightRoyalBlue text-white' : 'bg-gray-100 text-gray-800',
-                { 'opacity-50': isLoading && index === messages.length - 1 }
-              ]"
-            >
-              <div class="flex items-center space-x-2 mb-1">
-                <span class="text-sm font-medium">{{ message.type === 'user' ? 'You' : 'AI Assistant' }}</span>
-                <span v-if="message.type === 'ai'" class="text-xs text-gray-500">
-                  {{ getTimestamp(message.timestamp) }}
-                </span>
-              </div>
-              <div class="text-sm">{{ message.text }}</div>
+        
+          <!-- Centered Header Content with Absolute Positioning -->
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <h1 class="text-2xl md:text-3xl font-bold text-white text-center">
+              Welcome to the Help Desk System
+            </h1>
+            <div class="flex justify-center mt-2">
+              <span class="text-sm text-blue-100">
+                <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                Conversation Mode Active
+              </span>
             </div>
-          </template>
-          <div v-else class="text-center flex flex-col items-center justify-center h-full">
-            <MessageSquare class="w-16 h-16 mx-auto mb-4 text-gray-400" />
-            <p class="text-lg font-medium">No messages yet</p>
-            <p class="text-sm">Start a conversation by asking a question!</p>
           </div>
         </div>
-        <div class="flex justify-center absolute bottom-10 w-full">
-          <div class="flex flex-row items-center space-x-2 w-1/2 h-12 bg-lightRoyalBlue rounded-full">
-            <input
-              v-model="userInput"
-              @keyup.enter="sendMessage"
-              placeholder="Ask the System..."
-              class="flex-grow border-2 border-lightRoyalBlue rounded-full focus:outline-none focus:ring-2 focus:ring-royalBlue transition duration-200 ease-in-out bg-lightRoyalBlue"
-              :disabled="isLoading"
-              style="margin-left: 10px;"
-            />
-            <button
-              @click="sendMessage"
-              class="bg-darkRoyalBlue text-white w-10 h-10 p-2 rounded-full flex items-center justify-center hover:bg-lightRoyalBlue focus:outline-none focus:ring-2 focus:ring-royalBlue transition-colors duration-200"
-              :disabled="isLoading"
-              style="margin-right: 10px;"
-            >
-              <Send v-if="!isLoading" class="w-5 h-5" />
-              <Loader v-else class="w-5 h-5 animate-spin" />
-            </button>
+        <div class="p-6">
+          <div ref="chatContainer" class="h-[400px] overflow-y-auto mb-6 space-y-4 flex flex-col items-center">
+            <template v-if="messages.length">
+              <div
+                v-for="(message, index) in messages"
+                :key="index"
+                :class="[ 
+                  'max-w-[80%] p-3 rounded-lg transition-all duration-300',
+                  message.type === 'user' ? 'ml-auto bg-light-blue-200 text-black' : 'bg-light-blue-100 text-gray-800',  // Updated class for AI Assistant responses
+                  { 'opacity-50': isLoading && index === messages.length - 1 }
+                ]"
+              >
+                <div class="flex items-center space-x-2 mb-1">
+                  <span class="text-sm font-medium">{{ message.type === 'user' ? 'You' : 'AI Assistant' }}</span>
+                  <span v-if="message.type === 'ai'" class="text-xs text-gray-500">
+                    {{ getTimestamp(message.timestamp) }}
+                  </span>
+                </div>
+                <div class="text-sm">{{ message.text }}</div>
+              </div>
+            </template>
+            <div v-else class="text-center flex flex-col items-center justify-center h-full">
+              <MessageSquare class="w-16 h-16 mx-auto mb-4 text-gray-400" />
+              <p class="text-lg font-medium">No messages yet</p>
+              <p class="text-sm">Start a conversation by asking a question!</p>
+            </div>
+          </div>
+          <div class="flex justify-center absolute bottom-10 w-full">
+            <div class="flex flex-row items-center space-x-2 w-1/2 h-12 bg-lightRoyalBlue rounded-full">
+              <input
+                v-model="userInput"
+                @keyup.enter="sendMessage"
+                placeholder="Ask the System..."
+                class="flex-grow border-2 border-lightRoyalBlue rounded-full focus:outline-none focus:ring-2 focus:ring-royalBlue transition duration-200 ease-in-out bg-lightRoyalBlue"
+                :disabled="isLoading"
+                style="margin-left: 10px;"
+              />
+              <button
+                @click="sendMessage"
+                class="bg-darkRoyalBlue text-white w-10 h-10 p-2 rounded-full flex items-center justify-center hover:bg-lightRoyalBlue focus:outline-none focus:ring-2 focus:ring-royalBlue transition-colors duration-200"
+                :disabled="isLoading"
+                style="margin-right: 10px;"
+              >
+                <Send v-if="!isLoading" class="w-5 h-5" />
+                <Loader v-else class="w-5 h-5 animate-spin" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -75,13 +83,29 @@
   padding: 0;
   box-sizing: border-box;
 }
+.bg-light-blue-100 {
+  background-color: #D1E6FF; /* Light color for AI Assistant messages */
+}
+.sidebar {
+  width: 300px; /* Adjust width as needed */
+  height: 100%;
+  position: absolute; /* Position it absolutely */
+  left: 0; /* Align to the left */
+  top: 0; /* Align to the top */
+  z-index: 10; /* Ensure it appears above other content */
+  overflow-y: auto; /* Allow scrolling if content overflows */
+}
+.history-message {
+  margin: 5px 0;
+}
 </style>
 
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import History from './History.vue';
+import ChatHistory from './History.vue';
 import { Send, Loader, MessageSquare } from 'lucide-vue-next'; 
+import ToggleHistoryButton from './ToggleButton.vue';
 
 const genAI = ref(null);
 const model = ref(null);
@@ -89,6 +113,7 @@ const userInput = ref('');
 const messages = ref([]);
 const chatContainer = ref(null);
 const isLoading = ref(false);
+const showHistory = ref(false);
 
 const generationConfig = {
   temperature: 0.7,
@@ -214,6 +239,10 @@ const generateAnswer = async (question) => {
 const scrollToBottom = () => {
   const container = chatContainer.value;
   container.scrollTop = container.scrollHeight;
+};
+
+const toggleHistory = () => {
+  showHistory.value = !showHistory.value;
 };
 
 onMounted(() => {
