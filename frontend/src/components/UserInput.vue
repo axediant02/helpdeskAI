@@ -7,7 +7,7 @@
           <div class="mr-auto">
             <ToggleHistoryButton :showHistory="showHistory" :toggleHistory="toggleHistory" />
           </div>
-                  <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
             <h1 class="text-2xl md:text-3xl font-bold text-white text-center">
               Welcome to the Help Desk System
             </h1>
@@ -18,8 +18,10 @@
               </span>
             </div>
           </div>
+          <div class="absolute right-0 top-0 flex items-center justify-center" style="margin-right: 20px; margin-top: 20px;">
+            <LoginButton />
+          </div>
         </div>
-        <LoginButton />
         <div class="p-6">
           <div ref="chatContainer" class="h-[400px] overflow-y-auto mb-6 space-y-4 flex flex-col items-center">
             <template v-if="messages.length">
