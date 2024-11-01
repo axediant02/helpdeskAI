@@ -4,13 +4,10 @@
     <div class="flex-grow flex items-center justify-center p-0">
       <div class="h-full w-full shadow-xl overflow-hidden relative bg-royalBlue">
         <div class="flex items-center p-6 bg-gradient-to-r h-20 from-lightRoyalBlue to-darkRoyalBlue relative">
-          <!-- Left-aligned Toggle History Button -->
           <div class="mr-auto">
             <ToggleHistoryButton :showHistory="showHistory" :toggleHistory="toggleHistory" />
           </div>
-        
-          <!-- Centered Header Content with Absolute Positioning -->
-          <div class="absolute inset-0 flex flex-col items-center justify-center">
+                  <div class="absolute inset-0 flex flex-col items-center justify-center">
             <h1 class="text-2xl md:text-3xl font-bold text-white text-center">
               Welcome to the Help Desk System
             </h1>
@@ -22,6 +19,7 @@
             </div>
           </div>
         </div>
+        <LoginButton />
         <div class="p-6">
           <div ref="chatContainer" class="h-[400px] overflow-y-auto mb-6 space-y-4 flex flex-col items-center">
             <template v-if="messages.length">
@@ -30,7 +28,7 @@
                 :key="index"
                 :class="[ 
                   'max-w-[80%] p-3 rounded-lg transition-all duration-300',
-                  message.type === 'user' ? 'ml-auto bg-light-blue-200 text-black' : 'bg-light-blue-100 text-gray-800',  // Updated class for AI Assistant responses
+                  message.type === 'user' ? 'ml-auto bg-light-blue-200 text-black' : 'bg-light-blue-100 text-gray-800',
                   { 'opacity-50': isLoading && index === messages.length - 1 }
                 ]"
               >
@@ -77,23 +75,22 @@
 </template>
 
 <style scoped>
-/* Add this to ensure no margin or padding is applied */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 .bg-light-blue-100 {
-  background-color: #D1E6FF; /* Light color for AI Assistant messages */
+  background-color: #D1E6FF;
 }
 .sidebar {
-  width: 300px; /* Adjust width as needed */
+  width: 300px;
   height: 100%;
-  position: absolute; /* Position it absolutely */
-  left: 0; /* Align to the left */
-  top: 0; /* Align to the top */
-  z-index: 10; /* Ensure it appears above other content */
-  overflow-y: auto; /* Allow scrolling if content overflows */
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  overflow-y: auto;
 }
 .history-message {
   margin: 5px 0;
@@ -106,6 +103,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import ChatHistory from './History.vue';
 import { Send, Loader, MessageSquare } from 'lucide-vue-next'; 
 import ToggleHistoryButton from './ToggleButton.vue';
+import LoginButton from './LoginButton.vue';
 
 const genAI = ref(null);
 const model = ref(null);

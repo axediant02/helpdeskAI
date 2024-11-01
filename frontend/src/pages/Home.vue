@@ -7,10 +7,9 @@
 
 <script setup>
 import Navbar from "@/components/Navbar.vue";
-import History from "@/components/History.vue";
 import UserInput from "@/components/UserInput.vue";
 
-import { ref, onMounted, nextTick } from 'vue';
+import { ref } from 'vue';
 
 const messages = ref([]);
 const isLoading = ref(false);
