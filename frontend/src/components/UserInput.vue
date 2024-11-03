@@ -5,6 +5,8 @@
       <History
         v-if="showHistory"
         :messages="messages"
+        :showHistory="showHistory"
+        :toggleHistory="toggleHistory"
         class="fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg p-4"
       />
     </transition>
@@ -12,30 +14,32 @@
     <!-- Main Chat Interface -->
     <div :class="showHistory ? 'ml-64' : 'ml-0'" class="flex-grow flex items-center justify-center p-0 transition-all duration-300">
       <div class="h-full w-full shadow-xl overflow-hidden relative bg-royalBlue">
-        <div class="flex items-center p-6 bg-gradient-to-r h-20 from-lightRoyalBlue to-darkRoyalBlue relative">
-          <div class="mr-auto">
-            <ToggleHistoryButton :showHistory="showHistory" :toggleHistory="toggleHistory" />
-          </div>
-            <div class="absolute inset-0 flex flex-col items-center justify-center">
-            <h1 class="text-2xl md:text-3xl font-bold text-white text-center">
-              Welcome to the Help Desk System
-            </h1>
-            <div class="flex justify-center mt-2">
-              <span class="text-sm text-blue-100">
-                <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                Conversation Mode Active
-              </span>
+
+        <!-- Header Section -->
+          <div class="flex items-center p-6 bg-gradient-to-r h-20 from-lightRoyalBlue to-darkRoyalBlue">
+            <div class="mr-auto">
+              <ToggleButton :showHistory="showHistory" :toggleHistory="toggleHistory" />
+            </div>
+            <div class="flex-grow flex flex-col items-center justify-center text-center">
+              <h1 class="text-2xl md:text-3xl font-bold text-white">
+                Welcome to the Help Desk System
+              </h1>
+              <div class="flex justify-center mt-2">
+                <span class="text-sm text-blue-100">
+                  <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                  Conversation Mode Active
+                </span>
+              </div>
+            </div>
+        
+            <!-- Login Button -->
+            <div class="flex items-center justify-center" style="margin-right: 20px; margin-top: 20px;">
+              <LoginButton />
             </div>
           </div>
-          <div class="absolute right-0 top-0 flex items-center justify-center" style="margin-right: 20px; margin-top: 20px;">
-            <LoginButton />
-          </div>
-        </div>
-
-
 
         <div class="p-6">
-          <div class="flex justify-center">
+          <div class="h-full flex justify-center items-center">
             <div ref="chatContainer" class="h-full w-1/2 overflow-y-auto mb-6 space-y-4 p-4 rounded-lg shadow-inner">
               <template v-if="messages.length">
               <div
