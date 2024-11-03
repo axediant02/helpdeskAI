@@ -8,7 +8,9 @@
         :showHistory="showHistory"
         :toggleHistory="toggleHistory"
         class="fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg p-4"
-      />
+      >
+        <button @click="toggleHistory" class="close-button">Close</button>
+      </History>
     </transition>
 
     <!-- Main Chat Interface -->
@@ -71,10 +73,10 @@
                 </div>
               </div>
             </template>
-            <div v-else class="text-center text-gray-500 flex flex-col items-center">
-              <MessageSquare class="w-16 h-16 mx-auto mb-4 text-white" />
-              <p class="text-lg font-medium text-white">No messages yet</p>
-              <p class="text-sm text-white">Start a conversation by asking a question!</p>
+            <div v-else class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 txt-center flex flex-col items-center justify-center h-full">
+              <MessageSquare class="w-16 h-16 mx-auto mb-4 text-gray-400" />
+              <p class="text-lg font-medium">No messages yet</p>
+              <p class="text-sm">Start a conversation by asking a question!</p>
             </div>
           </div>
         </div>
@@ -129,6 +131,14 @@
 }
 .history-message {
   margin: 5px 0;
+}
+.close-button {
+  background: none;
+  border: none;
+  color: #000;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 </style>
 
