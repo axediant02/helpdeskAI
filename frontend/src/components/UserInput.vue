@@ -22,33 +22,53 @@
             <LoginButton />
           </div>
         </div>
+
+
+
         <div class="p-6">
-          <div ref="chatContainer" class="h-[400px] overflow-y-auto mb-6 space-y-4 flex flex-col items-center">
-            <template v-if="messages.length">
+          <div class="flex justify-center">
+            <div ref="chatContainer" class="h-full w-1/2 overflow-y-auto mb-6 space-y-4 p-4 rounded-lg shadow-inner">
+              <template v-if="messages.length">
               <div
                 v-for="(message, index) in messages"
                 :key="index"
                 :class="[ 
-                  'max-w-[80%] p-3 rounded-lg transition-all duration-300',
-                  message.type === 'user' ? 'ml-auto bg-light-blue-200 text-black' : 'bg-light-blue-100 text-gray-800',
-                  { 'opacity-50': isLoading && index === messages.length - 1 }
+                  'flex items-end space-x-2 mb-4',
+                  message.type === 'user' ? 'justify-end' : 'justify-start'
                 ]"
               >
-                <div class="flex items-center space-x-2 mb-1">
-                  <span class="text-sm font-medium">{{ message.type === 'user' ? 'You' : 'AI Assistant' }}</span>
-                  <span v-if="message.type === 'ai'" class="text-xs text-gray-500">
-                    {{ getTimestamp(message.timestamp) }}
-                  </span>
+                <!-- Display user messages aligned to the right and AI messages aligned to the left -->
+                <div
+                :class="[ 
+                  'inline-block w-auto max-w-[70%] p-3 rounded-2xl shadow transition-all duration-300',
+                  message.type === 'user' 
+                    ? 'bg-blue-500 text-white ml-auto rounded-tr-none' 
+                    : 'bg-gray-100 text-gray-800 rounded-tl-none'
+                ]"
+              >
+                  <div class="flex items-center space-x-2 mb-1">
+                    <span class="text-xs font-semibold">
+                      {{ message.type === 'user' ? 'You' : 'AI Assistant' }}
+                    </span>
+                    <span v-if="message.type === 'ai'" class="text-xs text-gray-400">
+                      {{ getTimestamp(message.timestamp) }}
+                    </span>
+                  </div>
+                  <div class="text-sm">{{ message.text }}</div>
                 </div>
-                <div class="text-sm">{{ message.text }}</div>
               </div>
             </template>
-            <div v-else class="text-center flex flex-col items-center justify-center h-full">
-              <MessageSquare class="w-16 h-16 mx-auto mb-4 text-gray-400" />
-              <p class="text-lg font-medium">No messages yet</p>
-              <p class="text-sm">Start a conversation by asking a question!</p>
+            <div v-else class="text-center text-gray-500 flex flex-col items-center">
+              <MessageSquare class="w-16 h-16 mx-auto mb-4 text-white" />
+              <p class="text-lg font-medium text-white">No messages yet</p>
+              <p class="text-sm text-white">Start a conversation by asking a question!</p>
             </div>
           </div>
+        </div>
+
+
+
+          
           <div class="flex justify-center absolute bottom-10 w-full">
             <div class="flex flex-row items-center space-x-2 w-1/2 h-12 bg-lightRoyalBlue rounded-full">
               <input
@@ -175,10 +195,6 @@ const generateAnswer = async (question) => {
   const parts = [
     systemPrompt,
     { text: "Answer the question precisely and accurately." },
-    { text: `Student: ${question}` },
-    { text: 'Assistant: ' },
-    { text: "input: Question" },
-    { text: "output: Answer" },
     { text: "input: Where is the library located?" },
     { text: "output: The library is located on the second floor of the main building, near the science labs." },
     { text: "input: What time does the school day start?" },
