@@ -145,8 +145,9 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import History from './History.vue';
+// import { Send, Loader, MessageSquare } from 'lucide-vue-next';
 import { Send, Loader, MessageSquare } from 'lucide-vue-next'; 
+import History from './History.vue';
 import ToggleButton from './ToggleButton.vue';
 import LoginButton from './LoginButton.vue';
 
@@ -156,7 +157,6 @@ const userInput = ref('');
 const messages = ref([]);
 const chatContainer = ref(null);
 const isLoading = ref(false);
-const showHistory = ref(false);
 
 const generationConfig = {
   temperature: 0.7,
@@ -166,58 +166,72 @@ const generationConfig = {
 };
 
 const systemPrompt = {
-  text: `You are a friendly AI assistant for Consolatrix, your name is Ezhack. Answer the question precisely and accurately base on the given data. If the user ask a question that the answer is Yes or No, then answer Yes or No, and give a little information. Remember the context of the conversation in case for chain conversation. If the question does not have data on the system for response, respond with "I dont have information about that for now, please wait for the next update". If the question is not related to the data, say "I can't help with that question .The scope of this system is limited to Consolatrix. Please ask a question related to Consolatrix."`
+  text: `You are a friendly AI assistant for Consolatrix, your name is Ezhack. Answer the question precisely and accurately base on the given data. If the user ask a question that the answer is Yes or No, then answer Yes or No, and give a little information. Remember the context of the conversation in case for chain conversation. If the question is not related to the data, say "I can't help with that question .The scope of this system is limited to Consolatrix. Please ask a question related to Consolatrix."`
 };
-
 
 const getTimestamp = (timestamp) => {
   if (!timestamp) return '';
   const now = new Date();
   const msgTime = new Date(timestamp);
-  
-  return now.toDateString() === msgTime.toDateString() 
-    ? msgTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
+  return now.toDateString() === msgTime.toDateString()
+    ? msgTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     : msgTime.toLocaleDateString();
+};
+
+const getMessageClass = (type, index) => {
+  return [
+    'max-w-[80%] p-3 rounded-lg transition-all duration-300',
+    type === 'user' ? 'ml-auto bg-blue-500 text-white' : 'bg-gray-100 text-gray-800',
+    { 'opacity-50': isLoading.value && index === messages.value.length - 1 },
+  ];
 };
 
 const sendMessage = async () => {
   if (!userInput.value.trim() || isLoading.value) return;
-
-  const currentTime = new Date().toISOString();
-  messages.value.push({ 
-    type: 'user', 
+  
+  messages.value.push({
+    type: 'user',
     text: userInput.value,
-    timestamp: currentTime
+    timestamp: new Date().toISOString()
   });
-
+  
   const question = userInput.value;
   userInput.value = '';
   isLoading.value = true;
 
   try {
-    const answer = await generateAnswer(question);
-    messages.value.push({ 
-      type: 'ai', 
+    const answer = await fetchAnswer(question);
+    messages.value.push({
+      type: 'ai',
       text: answer,
       timestamp: new Date().toISOString()
     });
   } catch (error) {
     console.error('Error generating answer:', error);
-    messages.value.push({ 
-      type: 'ai', 
+    messages.value.push({
+      type: 'ai',
       text: 'Sorry, there was an error generating the answer. Please try again later.',
       timestamp: new Date().toISOString()
     });
   } finally {
     isLoading.value = false;
-    nextTick(() => scrollToBottom());
   }
+
+  scrollToBottom();
 };
 
 const generateAnswer = async (question) => {
+  const history = formatConversationHistory();
+
+  // Prepare the parts array without 'role' and 'timestamp'
   const parts = [
     systemPrompt,
+    ...history.map(msg => ({ text: msg.text })), // Only include the text
     { text: "Answer the question precisely and accurately." },
+    { text: `Student: ${question}` },
+    { text: 'Assistant: ' },
+    { text: "input: Question" },
+    { text: "output: Answer" },
     { text: "input: Where is the library located?" },
     { text: "output: The library is located on the second floor of the main building, near the science labs." },
     { text: "input: What time does the school day start?" },
@@ -258,25 +272,24 @@ const generateAnswer = async (question) => {
     { text: "output: School ends at 3:00 PM. If you have after-school activities, make sure to check their specific end times." },
     { text: "input: Where can I find information about school events?" },
     { text: "output: Information about school events is posted on the school’s website and bulletin boards around the campus." },
-    // { text: "input: Who is the principal?" },
-    // { text: "output: Mr Yoso is the principal." }
   ];
 
   const result = await model.value.generateContent({
-    contents: [{ role: 'user', parts }],
+    contents: [{ parts }], // Adjusted to match expected structure
     generationConfig,
   });
 
   return result.response.text();
 };
 
-const scrollToBottom = () => {
-  const container = chatContainer.value;
-  container.scrollTop = container.scrollHeight;
+const fetchAnswer = async (question) => {
+  return await generateAnswer(question);
 };
 
-const toggleHistory = () => {
-  showHistory.value = !showHistory.value;
+const scrollToBottom = () => {
+  nextTick(() => {
+    chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+  });
 };
 
 onMounted(() => {
@@ -285,9 +298,20 @@ onMounted(() => {
   model.value = genAI.value.getGenerativeModel({ model: 'gemini-1.5-pro' });
 });
 
-watch(messages, () => {
-  nextTick(() => {
-    scrollToBottom();
-  });
-});
+watch(messages, scrollToBottom);
+
+// Define the formatConversationHistory function
+const formatConversationHistory = () => {
+  return messages.value.map(message => ({
+    text: message.text,
+    role: message.type === 'user' ? 'user' : 'assistant',
+    timestamp: message.timestamp
+  }));
+};
+
+// Define reactive properties
+const showHistory = ref(false);
+const toggleHistory = () => {
+  showHistory.value = !showHistory.value;
+};
 </script>
