@@ -1,25 +1,45 @@
 <template>
-  <div class="sidebar bg-white shadow-lg ml-2">
-    <h2 class="text-lg font-bold">Chat History</h2>
-    <div v-for="(msg, index) in messages" :key="index" class="history-message">
-      <span>{{ msg.type === 'user' ? 'You' : 'AI Assistant' }}: {{ msg.text }}</span>
+  <div class="relative h-screen flex">
+    <!-- Toggle Button -->
+
+    <!-- Sidebar History -->
+    <transition name="slide">
+      <div
+        v-if="showHistory"
+        class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg p-4 z-40"
+      >
+        <h2 class="text-lg font-semibold mb-4">History</h2>
+        <!-- History content goes here -->
+      </div>
+    </transition>
+
+    <!-- Main Content Area -->
+    <div :class="showHistory ? 'ml-64' : 'ml-0'" class="flex-grow flex items-center justify-center p-0 transition-all duration-300">
+      <p>Coming Soon....</p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { ref } from 'vue';
 
-const props = defineProps({
-  messages: {
-    type: Array,
-    required: true
-  }
-});
+const showHistory = ref(false);
+
+const toggleHistory = () => {
+  showHistory.value = !showHistory.value;
+};
 </script>
 
 <style scoped>
-.history-message {
-  margin: 5px 0;
+/* Slide transition for sidebar */
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s ease;
+}
+.slide-enter {
+  transform: translateX(-100%);
+}
+.slide-leave-to {
+  transform: translateX(-100%);
 }
 </style>

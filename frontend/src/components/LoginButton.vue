@@ -1,7 +1,7 @@
 <template>
     <div class="relative">
       <router-link to="/login" v-if="!isAuthenticated">
-        <button @click="login" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300 ease-in-out">
+        <button @click="login" class="px-4 py-2 mb-5 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300 ease-in-out">
         Log In
         </button>
       </router-link>

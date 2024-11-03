@@ -1,7 +1,16 @@
 <template>
   <div class="h-screen bg-gray-100 flex">
-    <ChatHistory v-if="showHistory" :messages="messages" />
-    <div class="flex-grow flex items-center justify-center p-0">
+    <!-- Sidebar for Chat History -->
+    <transition name="slide">
+      <History
+        v-if="showHistory"
+        :messages="messages"
+        class="fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg p-4"
+      />
+    </transition>
+
+    <!-- Main Chat Interface -->
+    <div :class="showHistory ? 'ml-64' : 'ml-0'" class="flex-grow flex items-center justify-center p-0 transition-all duration-300">
       <div class="h-full w-full shadow-xl overflow-hidden relative bg-royalBlue">
         <div class="flex items-center p-6 bg-gradient-to-r h-20 from-lightRoyalBlue to-darkRoyalBlue relative">
           <div class="mr-auto">
@@ -122,9 +131,9 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import ChatHistory from './History.vue';
+import History from './History.vue';
 import { Send, Loader, MessageSquare } from 'lucide-vue-next'; 
-import ToggleHistoryButton from './ToggleButton.vue';
+import ToggleButton from './ToggleButton.vue';
 import LoginButton from './LoginButton.vue';
 
 const genAI = ref(null);
