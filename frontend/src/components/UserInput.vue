@@ -223,7 +223,7 @@ const sendMessage = async () => {
 const generateAnswer = async (question) => {
   const history = formatConversationHistory();
 
-  // Prepare the parts array without 'role' and 'timestamp'
+
   const parts = [
     systemPrompt,
     ...history.map(msg => ({ text: msg.text })), // Only include the text
