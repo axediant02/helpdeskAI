@@ -42,6 +42,7 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: AdminPanel,
+      meta: { requiresAuth: true },
     },
     {
       path: '/login',
@@ -54,6 +55,16 @@ const router = createRouter({
       component: SignupPage
     },
   ]
+})
+
+router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore()
+
+    if (to.meta.requiresAuth && !authStore.isAdmin) {
+        next({ path: '/login' })
+    } else {
+        next()
+    }
 })
 
 export default router

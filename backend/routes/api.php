@@ -4,8 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\UnansweredQuestionsController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Middleware;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -20,7 +18,3 @@ Route::post('/unanswered-questions', [UnansweredQuestionsController::class, 'sto
 Route::get('/unanswered-questions/{id}', [UnansweredQuestionsController::class, 'show']);
 Route::put('/unanswered-questions/{id}', [UnansweredQuestionsController::class, 'update']);
 Route::delete('/unanswered-questions/{id}', [UnansweredQuestionsController::class, 'destroy']);
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
