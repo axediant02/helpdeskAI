@@ -35,8 +35,13 @@
             </div>
         
             <!-- Login Button -->
-            <div class="flex items-center justify-center" style="margin-right: 20px; margin-top: 20px;">
-              <LoginButton />
+            <div>
+              <LoginButton @login-success="handleLogin" />
+              <!-- Show user name and logout button if user is logged in -->
+              <template v-if="user">
+                <span>{{ user.name }}</span>
+                <button @click="logout">Logout</button>
+              </template>
             </div>
           </div>
 
@@ -272,6 +277,8 @@ const generateAnswer = async (question) => {
     { text: "output: School ends at 3:00 PM. If you have after-school activities, make sure to check their specific end times." },
     { text: "input: Where can I find information about school events?" },
     { text: "output: Information about school events is posted on the school’s website and bulletin boards around the campus." },
+    { text: "input: Who is the principal?" },
+    { text: "output: IMr. John Doe is the principal of our school." },
   ];
 
   const result = await model.value.generateContent({
