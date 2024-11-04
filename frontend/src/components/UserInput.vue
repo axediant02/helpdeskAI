@@ -232,6 +232,8 @@ const generateAnswer = async (question) => {
     { text: 'Assistant: ' },
     { text: "input: Question" },
     { text: "output: Answer" },
+    { text: "input: Thank you" },
+    { text: "output: You're welcome! If you have any other questions, feel free to ask." },
     { text: "input: Where is the library located?" },
     { text: "output: The library is located on the second floor of the main building, near the science labs." },
     { text: "input: What time does the school day start?" },
