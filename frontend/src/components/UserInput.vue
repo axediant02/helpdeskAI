@@ -57,7 +57,7 @@
                   message.type === 'user' ? 'justify-end' : 'justify-start'
                 ]"
               >
-
+                <!-- Display user messages aligned to the right and AI messages aligned to the left -->
                 <div
                 :class="[ 
                   'inline-block w-auto max-w-[70%] p-3 rounded-2xl shadow transition-all duration-300',
@@ -150,6 +150,7 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+// import { Send, Loader, MessageSquare } from 'lucide-vue-next';
 import { Send, Loader, MessageSquare } from 'lucide-vue-next'; 
 import History from './History.vue';
 import ToggleButton from './ToggleButton.vue';
@@ -227,7 +228,7 @@ const sendMessage = async () => {
 const generateAnswer = async (question) => {
   const history = formatConversationHistory();
 
-
+  // Prepare the parts array without 'role' and 'timestamp'
   const parts = [
     systemPrompt,
     ...history.map(msg => ({ text: msg.text })), // Only include the text
