@@ -1,6 +1,5 @@
 <template>
   <div class="h-screen bg-gray-100 flex">
-    <!-- Sidebar for Chat History -->
     <transition name="slide">
       <History
         v-if="showHistory"
@@ -36,7 +35,7 @@
         
             <!-- Login Button -->
             <div class="flex items-center justify-center" style="margin-right: 20px; margin-top: 20px;">
-              <LoginButton />
+              <LoginButton :isAuthenticated="isAuthenticated" />
             </div>
           </div>
 
@@ -157,6 +156,7 @@ const userInput = ref('');
 const messages = ref([]);
 const chatContainer = ref(null);
 const isLoading = ref(false);
+const isAuthenticated = ref(false);
 
 const generationConfig = {
   temperature: 0.7,
@@ -302,7 +302,6 @@ onMounted(() => {
 
 watch(messages, scrollToBottom);
 
-// Define the formatConversationHistory function
 const formatConversationHistory = () => {
   return messages.value.map(message => ({
     text: message.text,

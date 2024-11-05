@@ -7,7 +7,6 @@ import Help from '@/components/Help.vue'
 import AdminPanel from '@/pages/AdminPanel.vue'
 import LoginPage from '@/pages/LoginPage.vue'
 import SignupPage from '@/pages/SignupPage.vue'
-import { useAuthStore } from '@/store/auth'
 import { useRouter } from 'vue-router'
 
 const router = createRouter({
@@ -42,7 +41,6 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: AdminPanel,
-      meta: { requiresAuth: true },
     },
     {
       path: '/login',
@@ -55,16 +53,6 @@ const router = createRouter({
       component: SignupPage
     },
   ]
-})
-
-router.beforeEach((to, from, next) => {
-    const authStore = useAuthStore()
-
-    if (to.meta.requiresAuth && !authStore.isAdmin) {
-        next({ path: '/login' })
-    } else {
-        next()
-    }
 })
 
 export default router

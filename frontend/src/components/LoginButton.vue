@@ -34,50 +34,10 @@
     </div>
   </template>
   
-  <script>
-  import { ref } from 'vue';
-  import UserIcon from './UserIcon.vue';
-  
-  export default {
-    components: {
-      UserIcon,
-    },
-    setup() {
-      const isAuthenticated = ref(false);
-      const user = ref({ name: '' });
-      const showDropdown = ref(false);
-      const userIconSrc = ref('');
+  <script setup>
 
-      const toggleDropdown = () => {
-        showDropdown.value = !showDropdown.value;
-      };
-
-      const login = () => {
-        isAuthenticated.value = true;
-        user.value.name = 'John Doe';
-        userIconSrc.value = 'path/to/user/icon';
-      };
-
-      // Log out the user
-      const logout = () => {
-        isAuthenticated.value = false;
-        user.value.name = '';
-        userIconSrc.value = '';
-        showDropdown.value = false;
-      };
-
-      return {
-        isAuthenticated,
-        user,
-        showDropdown,
-        toggleDropdown,
-        login,
-        logout,
-        userIconSrc,
-      };
-    },
-  };
   </script>
+  
   
   <style scoped>
   button {
