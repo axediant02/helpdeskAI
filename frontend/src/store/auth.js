@@ -1,22 +1,21 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 export const useAuthStore = defineStore('auth', {
-    state: () => ({
-        isAdmin: false,
-        user: {
-            name: '',
-            email: '',
-        },
-    }),
-    actions: {
-        login(user) {
-            this.isAdmin = true;
-            this.user = { ...user };
-        },
-        logout() {
-            this.isAdmin = false;
-            this.user = { name: '', email: '' };
-        },
+  state: () => ({
+    isAuthenticated: false,
+    user: null,
+  }),
+  actions: {
+    login(userData) {
+      this.isAuthenticated = true;
+      this.user = userData;
     },
-})
-
+    logout() {
+      this.isAuthenticated = false;
+      this.user = null; 
+    },
+    isAdmin() {
+      return this.user && this.user.role === 'admin'; 
+    }
+  }
+});

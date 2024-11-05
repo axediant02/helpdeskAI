@@ -36,62 +36,54 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios'; // Import axios for API calls
+import axios from 'axios';
 
-// Router instance for navigation
 const router = useRouter();
 
-// State variables for login form
 const email = ref('');
 const password = ref('');
+const isAuthenticated = ref(false);
 
-// Login function
 const login = async () => {
-  // Validate email and password fields
   if (email.value && password.value) {
     try {
-      // Make an API call to authenticate user
       const response = await axios.post('api/login', {
         email: email.value,
         password: password.value,
       });
 
-      // Extract user data from response
-      const userData = response.data.user; // Access user object from response
-      console.log('User Data:', userData); // Log user data to see its structure
-      const userRole = userData.role; // Get the user's role from the response
+      const userData = response.data.user;
+      console.log('User Data:', userData);
+      const userRole = userData.role;
 
-      // Store any necessary information, such as user ID and token, in local storage
-      localStorage.setItem('userId', userData.id); // Store user ID if needed
-      localStorage.setItem('token', response.data.access_token); // Store access token
+      localStorage.setItem('userId', userData.id);
+      localStorage.setItem('token', response.data.access_token);
 
-      // Call function to handle redirection based on user role
+      isAuthenticated.value = true;
+
       handleRoleRedirect(userRole);
     } catch (error) {
-      // Handle specific error messages from API if possible
       if (error.response && error.response.status === 401) {
-        alert('Invalid email or password'); // Specific error handling for unauthorized access
+        alert('Invalid email or password');
       } else {
-        alert('An error occurred during login. Please try again.'); // General error message
+        alert('An error occurred during login. Please try again.');
       }
     }
   } else {
-    alert('Please fill in both fields'); // Basic error handling
+    alert('Please fill in both fields');
   }
 };
 
-// Function to handle redirection based on user role
 const handleRoleRedirect = (role) => {
   if (role === 'admin') {
-    router.push('/admin'); // Redirect to admin page
+    router.push('/admin');
   } else if (role === 'student') {
-    router.push('/'); // Redirect to homepage for students
+    router.push('/');
   } else {
-    alert('User role is not recognized'); // Handle unexpected roles
+    alert('User role is not recognized');
   }
 };
 </script>
 
 <style scoped>
-/* Add any scoped styles here if necessary */
 </style>
