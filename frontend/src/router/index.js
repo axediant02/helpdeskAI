@@ -7,7 +7,7 @@ import Help from '@/components/Help.vue';
 import AdminPanel from '@/pages/AdminPanel.vue';
 import LoginPage from '@/pages/LoginPage.vue';
 import SignupPage from '@/pages/SignupPage.vue';
-import { useAuthStore } from '@/store/store';
+// import { useAuthStore } from '@/store/store';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -56,25 +56,25 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore();
-  const { isAuthenticated, user } = authStore;
+// router.beforeEach((to, from, next) => {
+//   const authStore = useAuthStore();
+//   const { isAuthenticated, user } = authStore;
 
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!isAuthenticated) {
-      next({ name: 'login' });
-    } else if (to.matched.some(record => record.meta.adminOnly)) {
-      if (user && user.role === 'admin') {
-        next();
-      } else {
-        next({ name: 'Unauthorized' });
-      }
-    } else {
-      next(); 
-    }
-  } else {
-    next();
-  }
-});
+//   if (to.matched.some(record => record.meta.requiresAuth)) {
+//     if (!isAuthenticated) {
+//       next({ name: 'login' });
+//     } else if (to.matched.some(record => record.meta.adminOnly)) {
+//       if (user && user.role === 'admin') {
+//         next();
+//       } else {
+//         next({ name: 'Unauthorized' });
+//       }
+//     } else {
+//       next(); 
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 export default router;

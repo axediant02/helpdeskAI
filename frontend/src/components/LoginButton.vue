@@ -11,7 +11,7 @@
         class="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300 ease-in-out"
       >
         <UserIcon class="mr-2 text-xl"/>
-        <span>{{ user.name || 'Guest' }}</span> <!-- Use a default value -->
+        <span>{{ user.name }}</span>
         <i class="mdi mdi-chevron-down"></i>
       </button>
       <div 
@@ -54,9 +54,3 @@ const logout = () => {
   router.push('/login');
 }
 </script>
-
-<style scoped>
-button {
-  transition: background-color 0.2s;
-}
-</style>

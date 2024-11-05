@@ -47,6 +47,7 @@ const router = useRouter();
 async function handleLogin() {
   try {
     await authStore.login({ email: email.value, password: password.value });
+    console.log('logged in', 'token:', localStorage.getItem('token'));
     router.push('/');
   } catch (error) {
     errorMessage.value = error.response.data.message;
