@@ -12,7 +12,7 @@
         </div>
         <h2 class="text-2xl font-bold text-center mx-auto pr-14">User Login</h2>
       </div>
-      <form @submit.prevent="login">
+      <form @submit.prevent="handleLogin">
         <div class="mb-4">
           <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
           <input v-model="email" type="email" id="email" name="email" class="border-2 border-gray-300 p-2 w-full rounded" required>
@@ -35,54 +35,23 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useAuthStore } from '@/store/auth';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
-
-const router = useRouter();
 
 const email = ref('');
 const password = ref('');
-const isAuthenticated = ref(false);
+const errorMessage = ref('');
+const authStore = useAuthStore();
+const router = useRouter();
 
-const login = async () => {
-  if (email.value && password.value) {
-    try {
-      const response = await axios.post('api/login', {
-        email: email.value,
-        password: password.value,
-      });
-
-      const userData = response.data.user;
-      console.log('User Data:', userData);
-      const userRole = userData.role;
-
-      localStorage.setItem('userId', userData.id);
-      localStorage.setItem('token', response.data.access_token);
-
-      isAuthenticated.value = true;
-
-      handleRoleRedirect(userRole);
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        alert('Invalid email or password');
-      } else {
-        alert('An error occurred during login. Please try again.');
-      }
-    }
-  } else {
-    alert('Please fill in both fields');
-  }
-};
-
-const handleRoleRedirect = (role) => {
-  if (role === 'admin') {
-    router.push('/admin');
-  } else if (role === 'student') {
+async function handleLogin() {
+  try {
+    await authStore.login({ email: email.value, password: password.value });
     router.push('/');
-  } else {
-    alert('User role is not recognized');
+  } catch (error) {
+    errorMessage.value = error.response.data.message;
   }
-};
+}
 </script>
 
 <style scoped>

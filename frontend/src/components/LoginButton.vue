@@ -10,11 +10,9 @@
         @click="toggleDropdown" 
         class="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300 ease-in-out"
       >
-        <UserIcon :userIconSrc="userIconSrc" class="mr-2" />
-        <span>{{ user.name }}</span>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7-7m0 0l-7 7m7-7v7m-7-7h7" />
-        </svg>
+        <UserIcon class="mr-2 text-xl"/>
+        <span>{{ authStore.user.name }}</span>
+        <i class="mdi mdi-chevron-down"></i>
       </button>
       <div 
         v-if="showDropdown" 
@@ -38,11 +36,12 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
+import UserIcon from './UserIcon.vue';
 
 const router = useRouter()
-const store = useAuthStore()
+const authStore = useAuthStore();
 
-const isAuthenticated = computed(() => store.isAuthenticated)
+const isAuthenticated = computed(() => authStore.isAuthenticated)
 const user = computed(() => store.user)
 const showDropdown = ref(false)
 
@@ -51,8 +50,8 @@ const toggleDropdown = () => {
 }
 
 const logout = () => {
-  store.logout()
-  router.push('/login')
+  authStore.logout();
+  router.push('/login');
 }
 </script>
 

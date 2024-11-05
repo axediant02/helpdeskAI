@@ -79,10 +79,7 @@
             </div>
           </div>
         </div>
-
-
-
-          
+   
           <div class="flex justify-center absolute bottom-10 w-full">
             <div class="flex flex-row items-center space-x-2 w-1/2 h-12 bg-lightRoyalBlue rounded-full">
               <input
