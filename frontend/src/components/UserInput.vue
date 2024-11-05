@@ -34,7 +34,7 @@
             </div>
         
             <!-- Login Button -->
-            <div class="flex items-center justify-center" style="margin-right: 20px; margin-top: 20px;">
+            <div class="flex items-center justify-center" :style="{ marginRight: '20px'}">
               <LoginButton :isAuthenticated="isAuthenticated" />
             </div>
           </div>

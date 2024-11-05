@@ -7,6 +7,7 @@ import Help from '@/components/Help.vue';
 import AdminPanel from '@/pages/AdminPanel.vue';
 import LoginPage from '@/pages/LoginPage.vue';
 import SignupPage from '@/pages/SignupPage.vue';
+import Profile from '@/pages/Profile.vue';
 // import { useAuthStore } from '@/store/store';
 
 const router = createRouter({
@@ -52,6 +53,11 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: SignupPage,
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: Profile,
     },
   ],
 });
