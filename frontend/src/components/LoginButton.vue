@@ -47,10 +47,6 @@ const isAuthenticated = computed(() => {
   return storedAuthState !== null ? JSON.parse(storedAuthState) : authStore.isAuthenticated;
 });
 
-watch(isAuthenticated, (newValue) => {
-  localStorage.setItem('isAuthenticated', JSON.stringify(newValue));
-});
-
 const user = computed(() => authStore.user);
 const showDropdown = ref(false);
 
@@ -61,7 +57,9 @@ const toggleDropdown = () => {
 const logout = () => {
   authStore.logout();
   localStorage.removeItem('user');
+  localStorage.removeItem('isAuthenticated');
   toggleDropdown();
+  router.push('/');
 
 }
 </script>

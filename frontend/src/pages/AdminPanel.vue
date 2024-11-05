@@ -6,8 +6,8 @@
                     <h1 class="text-4xl font-bold text-gray-800">Admin Panel</h1>
                     <SearchBar />
                     <div class="flex flex-row items-center">
-                        <Notification class="text-3xl"/>
-                        <button class="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="logout">Logout</button>
+                        <Notification class="text-3xl mr-4"/>
+                        <LoginButton />
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@ import Notification from '@/components/Notification.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import SearchBar from '@/components/SearchBar.vue';
-
+import LoginButton from '@/components/LoginButton.vue';
 const router = useRouter();
 
 const logout = () => {
