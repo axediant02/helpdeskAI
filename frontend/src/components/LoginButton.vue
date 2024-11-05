@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
 import UserIcon from './UserIcon.vue';
@@ -41,7 +41,16 @@ import UserIcon from './UserIcon.vue';
 const router = useRouter();
 const authStore = useAuthStore();
 
-const isAuthenticated = computed(() => authStore.isAuthenticated);
+// Retrieve initial authentication state from local storage
+const isAuthenticated = computed(() => {
+  const storedAuthState = localStorage.getItem('isAuthenticated');
+  return storedAuthState !== null ? JSON.parse(storedAuthState) : authStore.isAuthenticated;
+});
+
+watch(isAuthenticated, (newValue) => {
+  localStorage.setItem('isAuthenticated', JSON.stringify(newValue));
+});
+
 const user = computed(() => authStore.user);
 const showDropdown = ref(false);
 
@@ -51,6 +60,7 @@ const toggleDropdown = () => {
 
 const logout = () => {
   authStore.logout();
-  router.push('/login');
+  localStorage.removeItem('user');
+  toggleDropdown();
 }
 </script>
