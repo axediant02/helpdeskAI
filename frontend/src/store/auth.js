@@ -2,13 +2,14 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 
 export const useAuthStore = defineStore('auth', {
-  state: () => ({
-    token: null,
-    user: {},
-    message: null,
-  }),
+    state: () => ({
+        token: localStorage.getItem('token') || null, // Retrieve token from local storage
+        user: JSON.parse(localStorage.getItem('user')) || {}, // Retrieve user from local storage
+        message: null,
+      }),
   getters: {
-    isAuthenticated: (state) => !!state.token,
+      isAuthenticated: (state) => !!state.token,
+      
   },
   actions: {
     async login(credentials) {
@@ -18,11 +19,15 @@ export const useAuthStore = defineStore('auth', {
         axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
         this.user = response.data.user;
           
-        localStorage.setItem('token', this.token);
+        localStorage.setItem('token', this.token, this.isAuthenticated);
         localStorage.setItem('user', JSON.stringify(this.user));
           
       } catch (error) {
-        this.message = "Login failed. Please check your credentials.";
+        if (error.response && error.response.status === 422) {
+          this.message = "Login failed. Please check your input data.";
+        } else {
+          this.message = "Login failed. Please check your credentials.";
+        }
         console.error("Login failed:", error.response ? error.response.data : error);
         throw error;
       }

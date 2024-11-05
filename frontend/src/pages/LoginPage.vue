@@ -46,13 +46,31 @@ const router = useRouter();
 
 async function handleLogin() {
   try {
-    await authStore.login({ email: email.value, password: password.value });
+    // Validate input before attempting to log in
+    if (!email.value || !password.value) {
+      throw new Error("Email and password are required.");
+    }
+    
+    // Call the login method and wait for the response
+    const response = await authStore.login({ email: email.value, password: password.value });
+    
+    // Save the token to localStorage if your store returns it
+    if (response && response.access_token) {
+      localStorage.setItem('token', response.access_token);
+    }
+    
+    // Redirect the user after successful login
     router.push('/');
   } catch (error) {
-    errorMessage.value = error.response.data.message;
+    // Error handling
+    errorMessage.value = error.response?.data?.message || "Login failed. Please try again.";
+    console.error("Login error:", error); // Added for debugging purposes
   }
 }
+
+// Removed onMounted function to prevent automatic token check
 </script>
+
 
 <style scoped>
 </style>
