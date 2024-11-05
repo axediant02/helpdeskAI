@@ -14,6 +14,12 @@ class AuthenticationController extends Controller
         return response()->json($users); // Return users as JSON
     }
 
+    public function show($id)
+    {
+        $user = User::find($id);
+        return response()->json($user);
+    }
+
     public function login(Request $request)
     {
         $validatedData = $request->validate([

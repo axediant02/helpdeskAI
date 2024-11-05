@@ -11,7 +11,7 @@
         class="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300 ease-in-out"
       >
         <UserIcon class="mr-2 text-xl"/>
-        <span>{{ authStore.user.name }}</span>
+        <span>{{ user.name || 'Guest' }}</span> <!-- Use a default value -->
         <i class="mdi mdi-chevron-down"></i>
       </button>
       <div 
@@ -38,15 +38,15 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/store/auth'
 import UserIcon from './UserIcon.vue';
 
-const router = useRouter()
+const router = useRouter();
 const authStore = useAuthStore();
 
-const isAuthenticated = computed(() => authStore.isAuthenticated)
-const user = computed(() => store.user)
-const showDropdown = ref(false)
+const isAuthenticated = computed(() => authStore.isAuthenticated);
+const user = computed(() => authStore.user);
+const showDropdown = ref(false);
 
 const toggleDropdown = () => {
-  showDropdown.value = !showDropdown.value
+  showDropdown.value = !showDropdown.value;
 }
 
 const logout = () => {
