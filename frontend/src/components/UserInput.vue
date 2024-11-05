@@ -1,6 +1,5 @@
 <template>
   <div class="h-screen bg-gray-100 flex">
-    <!-- Sidebar for Chat History -->
     <transition name="slide">
       <History
         v-if="showHistory"
@@ -36,7 +35,7 @@
         
             <!-- Login Button -->
             <div class="flex items-center justify-center" style="margin-right: 20px; margin-top: 20px;">
-              <LoginButton />
+              <LoginButton :isAuthenticated="isAuthenticated" />
             </div>
           </div>
 
@@ -80,10 +79,7 @@
             </div>
           </div>
         </div>
-
-
-
-          
+   
           <div class="flex justify-center absolute bottom-10 w-full">
             <div class="flex flex-row items-center space-x-2 w-1/2 h-12 bg-lightRoyalBlue rounded-full">
               <input
@@ -157,6 +153,7 @@ const userInput = ref('');
 const messages = ref([]);
 const chatContainer = ref(null);
 const isLoading = ref(false);
+const isAuthenticated = ref(false);
 
 const generationConfig = {
   temperature: 0.7,
@@ -231,8 +228,8 @@ const generateAnswer = async (question) => {
     { text: `Student: ${question}` },
     { text: 'Assistant: ' },
     { text: "input: Question" },
-    { text: "output: Answer" },
-    { text: "input: Thank you" },
+    { text: "output: Answer"},
+    { text: "input: Thank you"},
     { text: "output: You're welcome! If you have any other questions, feel free to ask." },
     { text: "input: Where is the library located?" },
     { text: "output: The library is located on the second floor of the main building, near the science labs." },
@@ -264,7 +261,7 @@ const generateAnswer = async (question) => {
     { text: "output: Sign up for extracurricular activities by visiting the activities coordinator’s office. You can also find information on the school’s website." },
     { text: "input: What is the school’s dress code?" },
     { text: "output: The dress code requires students to wear appropriate, non-revealing clothing. Specific guidelines are outlined in the student handbook." },
-    { text: "input: Where are the restrooms located?" },
+    { text: "input: Where are the restrooms room located?" },
     { text: "output: Restrooms are available on every floor. They are marked with signs for easy identification." },
     { text: "input: How do I get a student ID card?" },
     { text: "output: Student ID cards are issued during the first week of school. Visit the student services office for more information." },
@@ -302,7 +299,6 @@ onMounted(() => {
 
 watch(messages, scrollToBottom);
 
-// Define the formatConversationHistory function
 const formatConversationHistory = () => {
   return messages.value.map(message => ({
     text: message.text,

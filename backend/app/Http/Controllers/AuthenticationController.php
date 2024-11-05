@@ -8,6 +8,18 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticationController extends Controller
 {
+    public function index()
+    {
+        $users = User::all(); // Retrieve all registered users
+        return response()->json($users); // Return users as JSON
+    }
+
+    public function show($id)
+    {
+        $user = User::find($id);
+        return response()->json($user);
+    }
+
     public function login(Request $request)
     {
         $validatedData = $request->validate([
@@ -22,7 +34,16 @@ class AuthenticationController extends Controller
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['access_token' => $token]);
+        // Return the access token and user data including the role
+        return response()->json([
+            'access_token' => $token,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role, // Include user role
+            ]
+        ]);
     }
 
     public function signup(Request $request)
@@ -34,9 +55,26 @@ class AuthenticationController extends Controller
             'password_confirmation' => 'required_with:password|same:password|min:8',
         ]);
 
-        $user = User::create($validatedData);
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password']), // Hash the password
+            'role' => 'student', // Default role for new users
+        ]);
 
-        return response()->json(['message' => 'User created successfully', 'user' => $user]);
+        // Create token for the user
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'User created successfully',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role, // Include user role
+            ],
+            'access_token' => $token
+        ]);
     }
 
     public function logout(Request $request)

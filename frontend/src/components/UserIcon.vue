@@ -1,11 +1,12 @@
 <template>
-  <div class="user-icon">
-    <img :src="userIconSrc" alt="User Icon">
+  <div class="text-xl">
+    <i class="mdi mdi-account-outline text-2xl"></i>
   </div>
 </template>
 
 <script setup>
 import { defineProps } from 'vue';
+
 
 const props = defineProps({
   userIconSrc: {

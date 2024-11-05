@@ -18,6 +18,6 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        $this->call(UnansweredQuestionSeeder::class);
+        // $this->call(UnansweredQuestionSeeder::class);
     }
 }
