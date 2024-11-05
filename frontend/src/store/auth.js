@@ -20,8 +20,6 @@ export const useAuthStore = defineStore('auth', {
           
         localStorage.setItem('token', this.token);
         localStorage.setItem('user', JSON.stringify(this.user));
-        console.log(this.user);
-        console.log("Axios default headers:", axios.defaults.headers.common);
           
       } catch (error) {
         this.message = "Login failed. Please check your credentials.";
