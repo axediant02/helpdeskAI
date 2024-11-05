@@ -5,15 +5,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
-
-
-const props = defineProps({
-  userIconSrc: {
-    type: String,
-    required: true
-  }
-});
 </script>
 
 <style scoped>

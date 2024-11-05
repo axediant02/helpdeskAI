@@ -8,7 +8,7 @@
     <div v-else class="relative inline-block text-left">
       <button 
         @click="toggleDropdown" 
-        class="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300 ease-in-out"
+        class="flex items-center px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300 ease-in-out"
       >
         <UserIcon class="mr-2 text-xl"/>
         <span>{{ user.name }}</span>
@@ -47,10 +47,6 @@ const isAuthenticated = computed(() => {
   return storedAuthState !== null ? JSON.parse(storedAuthState) : authStore.isAuthenticated;
 });
 
-watch(isAuthenticated, (newValue) => {
-  localStorage.setItem('isAuthenticated', JSON.stringify(newValue));
-});
-
 const user = computed(() => authStore.user);
 const showDropdown = ref(false);
 
@@ -61,6 +57,9 @@ const toggleDropdown = () => {
 const logout = () => {
   authStore.logout();
   localStorage.removeItem('user');
+  localStorage.removeItem('isAuthenticated');
   toggleDropdown();
+  router.push('/');
+
 }
 </script>
