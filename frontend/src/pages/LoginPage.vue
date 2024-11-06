@@ -2,8 +2,8 @@
   <div class="h-screen flex flex-col">
   <Navbar />
   <div class="bg-royalBlue h-full flex items-center justify-center" style="background-image: url('https://fps.cdnpk.net/autopromos/search-right-tablet.svg'); background-size: cover; background-position: bottom;">
-    <div class="bg-white/30 backdrop-blur-md rounded-lg shadow-xl p-4 w-1/2 h-3/5 flex justify-end items-end" >
-      <div class="w-1/2 h-full p-4 m-4 flex flex-col justify-center items-center border border-black mb-6">
+    <div class="bg-white/15 backdrop-blur-md rounded-lg shadow-2xl p-4 w-1/2 h-3/5 flex justify-end items-end overflow-hidden pt-10" >
+      <div class="w-1/2 h-full p-4 m-4 flex flex-col border border-black mb-6">
         <div class="flex  items-center border border-black">
           <router-link to="/" class="w-6 h-6 bg-gray-500 text-white p-1 rounded mr-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -12,7 +12,10 @@
           </router-link>
           <span class="text-sm font-medium text-gray-700">Back</span>
         </div>
-        <h1 class="text-2xl font-bold mx-auto pr-10 text-center">Welcome Back!</h1>
+        <div class="border border-black">
+        <h1 class="text-3xl font-bold mx-auto pr-10 text-center">Welcome Back to the Help Desk!</h1>
+        <p class="text-lg font-medium">Log in to access the resources and support you need to thrive at Consolatrix College.</p>
+        </div>
       </div>
 
     <div class="w-full max-w-md h-full bg-lightRoyalBlue rounded-lg shadow-xl p-4 flex flex-col justify-center it">
