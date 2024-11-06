@@ -8,7 +8,7 @@ export default {
     extend: {
       colors: {
         royalBlue: '#4169E1',
-        lightRoyalBlue: '#6372D2',
+        lightRoyalBlue: '#6788DF',
         darkRoyalBlue: '#003DA5',
         buttonColor: '#4169E1',
         buttonHover: '#3456A0',

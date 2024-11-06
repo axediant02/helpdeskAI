@@ -1,8 +1,10 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="w-full max-w-md bg-white rounded-lg shadow-xl p-6">
-      <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center">
+  <div class="h-screen flex flex-col">
+  <Navbar />
+  <div class="bg-royalBlue h-full flex items-center justify-center" style="background-image: url('https://fps.cdnpk.net/autopromos/search-right-tablet.svg'); background-size: cover; background-position: bottom;">
+    <div class="bg-white/30 backdrop-blur-md rounded-lg shadow-xl p-4 w-1/2 h-3/5 flex justify-end items-end" >
+      <div class="w-1/2 h-full p-4 m-4 flex flex-col justify-center items-center border border-black mb-6">
+        <div class="flex  items-center border border-black">
           <router-link to="/" class="w-6 h-6 bg-gray-500 text-white p-1 rounded mr-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -10,7 +12,12 @@
           </router-link>
           <span class="text-sm font-medium text-gray-700">Back</span>
         </div>
-        <h2 class="text-2xl font-bold text-center mx-auto pr-14">User Login</h2>
+        <h1 class="text-2xl font-bold mx-auto pr-10 text-center">Welcome Back!</h1>
+      </div>
+
+    <div class="w-full max-w-md h-full bg-lightRoyalBlue rounded-lg shadow-xl p-4 flex flex-col justify-center it">
+      <div class="flex items-center justify-center mb-6 ">
+        <h2 class="text-2xl font-bold text-center mx-auto">User Login</h2>
       </div>
       <form @submit.prevent="handleLogin">
         <div class="mb-4">
@@ -31,12 +38,15 @@
       </div>
     </div>
   </div>
+  </div>
+</div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useAuthStore } from '@/store/auth';
 import { useRouter } from 'vue-router';
+import Navbar from '@/components/Navbar.vue';
 
 const email = ref('');
 const password = ref('');
@@ -73,4 +83,5 @@ async function handleLogin() {
 
 
 <style scoped>
+
 </style>
