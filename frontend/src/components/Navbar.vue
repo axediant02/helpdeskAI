@@ -4,7 +4,6 @@
         <ul>
           <li><router-link to="/">Home</router-link></li>
           <li><router-link to="/about">About</router-link></li>
-          <li><router-link to="/faq">FAQ</router-link></li>
           <li><router-link to="/contact">Contact Us</router-link></li>
           <li><router-link to="/help">Help</router-link></li>
         </ul>
