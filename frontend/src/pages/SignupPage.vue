@@ -1,15 +1,26 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="w-full max-w-md bg-white rounded-lg shadow-xl p-6">
-      <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center">
-          <router-link to="/" class="w-6 h-6 bg-gray-500 text-white p-1 rounded mr-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </router-link>
-          <span class="text-sm font-medium text-gray-700"><a href="/">Back</a></span>
+  <div class="h-screen flex flex-col">
+    <Navbar />
+  <div class="bg-royalBlue h-screen flex items-center justify-center" style="background-image: url('https://fps.cdnpk.net/autopromos/search-right-tablet.svg'); background-size: cover; background-position: bottom;">
+    <div class="bg-white/15 backdrop-blur-md rounded-lg shadow-2xl w-1/2 h-3/5 flex justify-end items-end overflow-hidden p-4 pt-10">
+      <div class="w-1/2 h-full mt-4 mr-4 flex flex-col mb-6">
+        <div class="flex items-center justify-center p-2 h-10 w-20 hover:bg-buttonHover rounded">
+          <router-link to="/login" class="w-6 h-6 text-white p-1 rounded mr-2 flex items-center">
+            <i class="mdi mdi-arrow-left h-4 w-4 flex justify-center items-center"></i>
+          <span class="text-sm font-medium text-gray-700 hover:text-gray-900 pl-2">Back</span>
+        </router-link>
         </div>
+        <div class="p-4 h-full flex flex-col justify-center">
+          <div class="flex mb-4">
+        <h1 class="text-3xl font-bold mx-auto pr-10 text-center">Join the Help Desk System!</h1>
+      </div>
+      <div class="">
+        <p class="text-lg text-justify"><span class="pl-4">Create</span> an account to access instant support and find answers to common questions about Consolatrix College. Your journey to easy, on-demand assistance starts here!</p>
+      </div>
+        </div>
+      </div>
+    <div class="w-full max-w-md bg-white/10 rounded-lg shadow-2xl p-4">
+      <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-center mx-auto pr-14">Sign Up</h2>
       </div>
       <form @submit.prevent="signup">
@@ -40,12 +51,17 @@
       </div>
     </div>
   </div>
+  </div>
+</div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import Navbar from '@/components/Navbar.vue';
+import '@mdi/font/css/materialdesignicons.css';
+
 
 const name = ref('');
 const email = ref('');
