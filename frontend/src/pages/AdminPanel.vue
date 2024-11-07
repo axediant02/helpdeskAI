@@ -22,7 +22,6 @@
 <script setup>
 import QuestionAndAnswer from '@/components/QuestionAndAnswer.vue';
 import Notification from '@/components/Notification.vue';
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import SearchBar from '@/components/SearchBar.vue';
 import LoginButton from '@/components/LoginButton.vue';
