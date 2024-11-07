@@ -1,13 +1,19 @@
 <template>
-  <div class="flex flex-col items-center justify-center p-4 w-screen">
+  <div class="flex flex-col items-center justify-center p-4 w-screen h-full">
     <div v-if="isLoading" class="w-10 h-10 animate-spin mb-4"></div>
     <p v-if="isLoading" class="text-lg font-medium text-gray-500">Loading Data, Please Wait...</p>
 
     <div v-else class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden">
+      <div>
       <div class="flex flex-row items-center justify-end w-full mb-4">
+        
+        <Button class="mr-4 w-30 h-10 text-lg text-white flex items-center justify-center" label="Add Admin" @click="openAddAdminModal">
+          <i class="mdi mdi-account-plus mr-2 ml-2"></i>
+        </Button>
+        <AddAdminModal/>
         <ExportCSV :questions="questions" />
       </div>
-      <table class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
+      <table class="min-w-full h-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
         <thead class="bg-gray-50">
           <tr>
             <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">ID</th>
@@ -50,6 +56,7 @@
           </tr>
         </tbody>
       </table>
+    </div>
       <Pagination :currentPage="currentPage" :totalPages="totalPages" @updatePage="currentPage = $event" />
     </div>
   </div>
@@ -63,6 +70,15 @@ import Pagination from '@/components/Pagination.vue';
 import EditButton from '@/components/buttons/EditButton.vue';
 import DeleteButton from '@/components/buttons/DeleteButton.vue';
 import '@mdi/font/css/materialdesignicons.css';
+import Button from '@/components/buttons/Button.vue';
+import AddAdminModal from '@/components/AddAdminModal.vue';
+import { useAddAdminStore } from '@/store/addAdminStore';
+
+const addAdminStore = useAddAdminStore();
+
+const openAddAdminModal = () => {
+  addAdminStore.openAddAdminModal();
+};
 
 const isLoading = ref(true);
 const questions = ref([]);

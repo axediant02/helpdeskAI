@@ -5,6 +5,8 @@ import router from './router';
 import axios from 'axios';
 import { createPinia } from 'pinia';
 import { useAuthStore } from '@/store/auth';
+import 'vue-toast-notification/dist/theme-bootstrap.css';
+import { ToastPlugin } from 'vue-toast-notification';
 
 // Create Vue app instance
 const app = createApp(App);
@@ -21,6 +23,8 @@ const authStore = useAuthStore();
 if (authStore.token) { 
     axios.defaults.headers.common['Authorization'] = `Bearer ${authStore.token}`;
 }
+
+app.use(ToastPlugin);
 
 // Use router
 app.use(router);
