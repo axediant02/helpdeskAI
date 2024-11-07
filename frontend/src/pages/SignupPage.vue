@@ -10,11 +10,12 @@
           <span class="text-sm font-medium text-gray-700 hover:text-gray-900 pl-2">Back</span>
         </router-link>
         </div>
-        <div class="p-4 h-full flex flex-col justify-center">
-          <div class="flex mb-4">
+        <div class="p-4 pb-20 h-full flex flex-col justify-center">
+          <div class="flex h-full border border-buttonColor rounded">
         <h1 class="text-3xl font-bold mx-auto pr-10 text-center">Join the Help Desk System!</h1>
       </div>
-      <div class="">
+      <div class="h-full
+      ">
         <p class="text-lg text-justify"><span class="pl-4">Create</span> an account to access instant support and find answers to common questions about Consolatrix College. Your journey to easy, on-demand assistance starts here!</p>
       </div>
         </div>
