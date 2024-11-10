@@ -41,18 +41,20 @@ class UnansweredQuestionsController extends Controller
     public function update(Request $request, $id)
     {
         $question = UnansweredQuestions::find($id);
+        $answer= UnansweredQuestions::find($id);
 
-        if (!$question) {
+        if (!$question || !$answer) {
             return response()->json(['error' => 'Question not found'], 404);
         }
 
         $validated = $request->validate([
             'question' => 'sometimes|required|string',
+            'answer' => 'sometimes|required|string',
         ]);
 
 
         $question->update($validated);
-
+        $answer->update($validated);
         return response()->json($question, 200);
     }
 

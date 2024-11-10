@@ -60,15 +60,19 @@
                     : 'bg-gray-100 text-gray-800 rounded-tl-none'
                 ]"
               >
-                  <div class="flex items-center space-x-2 mb-1">
-                    <span class="text-xs font-semibold">
-                      {{ message.type === 'user' ? 'You' : 'AI Assistant' }}
-                    </span>
-                    <span v-if="message.type === 'ai'" class="text-xs text-gray-400">
-                      {{ getTimestamp(message.timestamp) }}
-                    </span>
-                  </div>
-                  <div class="text-sm">{{ message.text }}</div>
+              <div class="flex items-center space-x-2 mb-1">
+                <span class="text-xs font-semibold">
+                  {{ message.type === 'user' ? 'You' : 'AI Assistant' }}
+                </span>
+                <span v-if="message.type === 'ai'" class="text-xs text-gray-400">
+                  {{ getTimestamp(message.timestamp) }}
+                </span>
+              </div>
+              <!-- Message text with padding added -->
+              <div class="text-sm px-2 py-1 rounded-md">
+                {{ message.text }}
+              </div>
+              
                 </div>
               </div>
             </template>
@@ -141,7 +145,6 @@
 <script setup>
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-// import { Send, Loader, MessageSquare } from 'lucide-vue-next';
 import { Send, Loader, MessageSquare } from 'lucide-vue-next'; 
 import History from './History.vue';
 import ToggleButton from './ToggleButton.vue';
@@ -220,7 +223,6 @@ const sendMessage = async () => {
 const generateAnswer = async (question) => {
   const history = formatConversationHistory();
 
-  // Prepare the parts array without 'role' and 'timestamp'
   const parts = [
     systemPrompt,
     ...history.map(msg => ({ text: msg.text })), // Only include the text
@@ -231,7 +233,7 @@ const generateAnswer = async (question) => {
     { text: "output: Answer"},
     { text: "input: Thank you"},
     { text: "output: You're welcome! If you have any other questions, feel free to ask." },
-    { text: "input: Where is the library located?" },
+    { text: "input: library" },
     { text: "output: The library is located on the second floor of the main building, near the science labs." },
     { text: "input: What time does the school day start?" },
     { text: "output: The school day starts at 8:00 AM. Make sure to arrive a bit earlier to get settled before classes begin." },
