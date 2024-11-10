@@ -5,62 +5,64 @@
 
     <div v-else class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden">
       <div>
-      <div class="flex flex-row items-center justify-end w-full mb-4">
-        
-        <Button class="mr-4 w-30 h-10 text-lg text-white flex items-center justify-center" label="Add Admin" @click="openAddAdminModal">
-          <i class="mdi mdi-account-plus mr-2 ml-2"></i>
-        </Button>
-        <AddAdminModal/>
-        <ExportCSV :questions="questions" />
-      </div>
-      <table class="min-w-full h-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">ID</th>
-            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Question</th>
-            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Answer</th>
-            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-for="(item, index) in questions" :key="item.id" class="hover:bg-gray-50" :class="{'bg-gray-100': index % 2 === 0}">
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.id }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              <template v-if="isEditing(item.id)">
-                <textarea v-model="editQuestion" class="border rounded w-full p-2" rows="3"></textarea>
-              </template>
-              <template v-else>{{ item.question }}</template>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-              <template v-if="isEditing(item.id)">
-                <textarea v-model="editAnswer" class="border rounded w-full p-2" rows="3"></textarea>
-              </template>
-              <template v-else>{{ item.answer }}</template>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-              <div class="flex space-x-2">
+        <div class="flex flex-row items-center justify-end w-full mb-4">
+          <Button class="mr-4 w-30 h-10 text-lg text-white flex items-center justify-center" label="Add Admin" @click="openAddAdminModal">
+            <i class="mdi mdi-account-plus mr-2 ml-2"></i>
+          </Button>
+          <AddAdminModal/>
+          <ExportCSV :questions="questions" />
+        </div>
+        <table class="min-w-full h-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">ID</th>
+              <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Question</th>
+              <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Answer</th>
+              <!-- Add responsive classes here -->
+              <th class="px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase w-28 sm:w-20">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="(item, index) in questions" :key="item.id" class="hover:bg-gray-50" :class="{'bg-gray-100': index % 2 === 0}">
+              <td class="px-4 py-4 text-sm font-medium text-gray-900">{{ item.id }}</td>
+              <td class="px-4 py-4 text-sm font-medium text-gray-900">
                 <template v-if="isEditing(item.id)">
-                  <button @click="saveEdit" class="text-green-600 hover:text-green-800 p-2 rounded-full bg-green-100">
-                    <i class="mdi mdi-check"></i>
-                  </button>
-                  <button @click="cancelEdit" class="text-gray-600 hover:text-gray-800 p-2 rounded-full bg-gray-100">
-                    <i class="mdi mdi-close"></i>
-                  </button>
+                  <textarea v-model="editQuestion" class="border rounded w-full p-2" rows="3"></textarea>
                 </template>
-                <template v-else>
-                  <EditButton :item="item" @click.native="startEdit(item)" :onEdit="saveEdit" />
-                  <DeleteButton :itemId="item.id" :onDelete="deleteItem" />
+                <template v-else>{{ item.question }}</template>
+              </td>
+              <td class="px-4 py-4 text-sm font-medium text-gray-900">
+                <template v-if="isEditing(item.id)">
+                  <textarea v-model="editAnswer" class="border rounded w-full p-2" rows="3"></textarea>
                 </template>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+                <template v-else>{{ item.answer }}</template>
+              </td>
+              <!-- Responsive Actions Column -->
+              <td class="px-2 py-4 text-sm w-auto sm:w-16">
+                <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
+                  <template v-if="isEditing(item.id)">
+                    <button @click="saveEdit" class="text-green-600 hover:text-green-800 p-2 rounded-full bg-green-100">
+                      <i class="mdi mdi-check"></i>
+                    </button>
+                    <button @click="cancelEdit" class="text-gray-600 hover:text-gray-800 p-2 rounded-full bg-gray-100">
+                      <i class="mdi mdi-close"></i>
+                    </button>
+                  </template>
+                  <template v-else>
+                    <EditButton :item="item" @click.native="startEdit(item)" :onEdit="saveEdit" />
+                    <DeleteButton :itemId="item.id" :onDelete="deleteItem" />
+                  </template>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <Pagination :currentPage="currentPage" :totalPages="totalPages" @updatePage="currentPage = $event" />
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
@@ -73,6 +75,7 @@ import '@mdi/font/css/materialdesignicons.css';
 import Button from '@/components/buttons/Button.vue';
 import AddAdminModal from '@/components/AddAdminModal.vue';
 import { useAddAdminStore } from '@/store/addAdminStore';
+import { useToast } from 'vue-toast-notification';
 
 const addAdminStore = useAddAdminStore();
 
@@ -86,6 +89,7 @@ const currentItemId = ref(null);
 const editQuestion = ref('');
 const editAnswer = ref('');
 const editing = ref(false);
+const toast = useToast();
 
 const currentPage = ref(1);
 const itemsPerPage = ref(5);
@@ -121,7 +125,6 @@ const startEdit = (item) => {
 
 const saveEdit = async () => {
   if (!editQuestion.value || !editAnswer.value) {
-    console.error('Question and answer cannot be empty');
     return;
   }
   try {
@@ -132,8 +135,9 @@ const saveEdit = async () => {
     resetEdit();
     await fetchData();
   } catch (error) {
-    console.error('Error updating item:', error);
+    toast.error('Error updating item:', error);
   }
+  toast.success('Item updated successfully');
 };
 
 const cancelEdit = resetEdit;

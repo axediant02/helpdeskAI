@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Nunito', 'sans-serif'],  // Set 'Nunito' as the default sans font
+        sans: ['Nunito', 'sans-serif'],
       },
       colors: {
         royalBlue: '#4169E1',
