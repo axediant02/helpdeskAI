@@ -90,7 +90,7 @@
                 v-model="userInput"
                 @keyup.enter="sendMessage"
                 placeholder="Ask the System..."
-                class="flex-grow border-2 border-lightRoyalBlue rounded-full focus:outline-none focus:ring-2 focus:ring-royalBlue transition duration-200 ease-in-out bg-lightRoyalBlue"
+                class="flex-grow focus:outline-none transition duration-200 ease-in-out bg-lightRoyalBlue"
                 :disabled="isLoading"
                 style="margin-left: 10px;"
               />
