@@ -11,12 +11,8 @@
         <button @click="toggleHistory" class="close-button">Close</button>
       </History>
     </transition>
-
-    <!-- Main Chat Interface -->
     <div :class="showHistory ? 'ml-64' : 'ml-0'" class="flex-grow flex items-center justify-center p-0 transition-all duration-300">
       <div class="h-full w-full shadow-xl overflow-hidden relative bg-royalBlue">
-
-        <!-- Header Section -->
           <div class="flex items-center p-6 bg-gradient-to-r h-20 from-lightRoyalBlue to-darkRoyalBlue">
             <div class="mr-auto">
               <ToggleButton :showHistory="showHistory" :toggleHistory="toggleHistory" />
@@ -32,8 +28,6 @@
                 </span>
               </div>
             </div>
-        
-            <!-- Login Button -->
             <div class="flex items-center justify-center" :style="{ marginRight: '20px'}">
               <LoginButton :isAuthenticated="isAuthenticated" />
             </div>
@@ -41,7 +35,7 @@
 
         <div class="p-6">
           <div class="h-full flex justify-center items-center">
-            <div ref="chatContainer" class="h-full w-1/2 overflow-y-auto mb-6 space-y-4 p-4 rounded-lg shadow-inner">
+            <div ref="chatContainer" class="h-full w-1/2 overflow-y-auto mb-10 space-y-4 p-4 rounded-lg shadow-inner bg-black">
               <template v-if="messages.length">
               <div
                 v-for="(message, index) in messages"
@@ -51,7 +45,6 @@
                   message.type === 'user' ? 'justify-end' : 'justify-start'
                 ]"
               >
-                <!-- Display user messages aligned to the right and AI messages aligned to the left -->
                 <div
                 :class="[ 
                   'inline-block w-auto max-w-[70%] p-3 rounded-2xl shadow transition-all duration-300',
@@ -68,7 +61,6 @@
                   {{ getTimestamp(message.timestamp) }}
                 </span>
               </div>
-              <!-- Message text with padding added -->
               <div class="text-sm px-2 py-1 rounded-md">
                 {{ message.text }}
               </div>
@@ -81,7 +73,7 @@
               <p class="text-lg font-medium">No messages yet</p>
               <p class="text-sm">Start a conversation by asking a question!</p>
             </div>
-          </div>
+
         </div>
    
           <div class="flex justify-center absolute bottom-10 w-full">
@@ -104,6 +96,7 @@
                 <Loader v-else class="w-5 h-5 animate-spin" />
               </button>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -225,7 +218,7 @@ const generateAnswer = async (question) => {
 
   const parts = [
     systemPrompt,
-    ...history.map(msg => ({ text: msg.text })), // Only include the text
+    ...history.map(msg => ({ text: msg.text })),
     { text: "Answer the question precisely and accurately." },
     { text: `Student: ${question}` },
     { text: 'Assistant: ' },
@@ -233,50 +226,56 @@ const generateAnswer = async (question) => {
     { text: "output: Answer"},
     { text: "input: Thank you"},
     { text: "output: You're welcome! If you have any other questions, feel free to ask." },
-    { text: "input: library" },
-    { text: "output: The library is located on the second floor of the main building, near the science labs." },
+    { text: "input: Where is the library?" },
+    { text: "output: The library is located on the 1st floor, above the canteen." },
     { text: "input: What time does the school day start?" },
-    { text: "output: The school day starts at 8:00 AM. Make sure to arrive a bit earlier to get settled before classes begin." },
+    { text: "output: For college students, the time usually starts depending on the schedule that the teacher assigned." },
+    { text: "output: For high school students, the time usually starts at 7:30 AM." },
+    { text: "output: For elementary students, the time usually starts at 7:30 AM." },
     { text: "input: Where can I find the cafeteria?" },
-    { text: "output: The cafeteria is on the ground floor, right next to the main entrance. It's open for breakfast and lunch." },
+    { text: "output: The cafeteria is on the ground floor, right next to the restrooms. It's open everyday for breakfast and lunch." },
     { text: "input: How can I get a locker?" },
-    { text: "output: You can get a locker by visiting the student services office. They will assign one to you and provide a key or combination." },
-    { text: "input: Where is the gymnasium?" },
-    { text: "output: The gymnasium is located on the west side of the campus, behind the main building. It’s next to the outdoor sports fields." },
+    { text: "output: Ask your adviser if there is a locker available for you." },
+    { text: "input: Where is the basketball court?" },
+    { text: "output: The basketball court can be found at the center of the campus. If you go straight from the lobby, you will see it up ahead." },
     { text: "input: What is the school’s policy on absences?" },
     { text: "output: If you need to be absent, make sure to notify the school office and provide a note from a parent or guardian explaining the absence." },
-    { text: "input: Where are the art classrooms?" },
-    { text: "output: The art classrooms are located on the third floor, in the east wing of the main building." },
+    { text: "input: Where are the senior high classrooms?" },
+    { text: "output: The senior high classrooms are located at the front of the building." },
     { text: "input: How do I contact a teacher?" },
     { text: "output: You can contact your teacher via email or by visiting them during their office hours, which are posted on the classroom door." },
     { text: "input: Where is the nurse’s office?" },
-    { text: "output: The nurse’s office is on the ground floor, near the main office. It's where you should go if you feel unwell during the school day." },
+    { text: "output: The nurse’s office is on the ground floor, near canteen. It's where you should go if you feel unwell during the school day." },
     { text: "input: What is the procedure for dropping off a forgotten lunch?" },
-    { text: "output: Drop off forgotten lunches at the main office. They will ensure that your child receives it during lunch period." },
+    { text: "output: Drop off forgotten lunches at the guard house. Leave your name and the name of the person who will be picking it up." },
     { text: "input: Where can I find the principal’s office?" },
-    { text: "output: The principal’s office is located in the administrative building, next to the main entrance." },
+    { text: "output: You can find the principal's office at the front of the building near the lobby." },
     { text: "input: What is the school’s policy on cell phone use?" },
     { text: "output: Cell phones should be turned off or on silent mode during class. They can be used during breaks and lunchtime." },
     { text: "input: Where is the computer lab?" },
-    { text: "output: The computer lab is on the second floor, adjacent to the library. It’s available for student use during free periods." },
+    { text: "output: For college students, the computer lab is on the 2nd floor, of the main building. For high school and elementary students, the computer lab is on the 1st floor, above the lobby." },
     { text: "input: How do I sign up for extracurricular activities?" },
-    { text: "output: Sign up for extracurricular activities by visiting the activities coordinator’s office. You can also find information on the school’s website." },
+    { text: "output: Sign up for extracurricular activities by visiting the activities coordinator’s office." },
     { text: "input: What is the school’s dress code?" },
-    { text: "output: The dress code requires students to wear appropriate, non-revealing clothing. Specific guidelines are outlined in the student handbook." },
+    { text: "output: The dress code requires students to wear school uniforms, or if you don't have one, you can buy one at the school treasury." },
     { text: "input: Where are the restrooms room located?" },
-    { text: "output: Restrooms are available on every floor. They are marked with signs for easy identification." },
+    { text: "output: Student restrooms are located beside the college lounge, left side of the basketball court." },
     { text: "input: How do I get a student ID card?" },
-    { text: "output: Student ID cards are issued during the first week of school. Visit the student services office for more information." },
-    { text: "input: Where is the music room?" },
-    { text: "output: The music room is on the ground floor, near the auditorium. It’s where you can find the band and choir classes." },
+    { text: "output: Student ID cards are issued during the first week of school. Visit the student services office for more information. If you lost your ID card, you can get a replacement at the college computer lab." },
     { text: "input: What time does school end?" },
-    { text: "output: School ends at 3:00 PM. If you have after-school activities, make sure to check their specific end times." },
+    { text: "output: School ends at 4:00 PM. If you have after-school activities, make sure to check their specific end times. If you are a college students, it depends on your schedule." },
     { text: "input: Where can I find information about school events?" },
     { text: "output: Information about school events is posted on the school’s website and bulletin boards around the campus." },
+
+    { text: "input: Who is the head of BSIT department?" },
+    { text: "output: Mr Procoro Gonzaga." },
+    { text: "input: Who is the head of BSIT department?" },
+    { text: "output: Mr Procoro Gonzaga." },
+
   ];
 
   const result = await model.value.generateContent({
-    contents: [{ parts }], // Adjusted to match expected structure
+    contents: [{ parts }],
     generationConfig,
   });
 
@@ -309,7 +308,6 @@ const formatConversationHistory = () => {
   }));
 };
 
-// Define reactive properties
 const showHistory = ref(false);
 const toggleHistory = () => {
   showHistory.value = !showHistory.value;
