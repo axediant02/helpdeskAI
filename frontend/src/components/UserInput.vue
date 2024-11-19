@@ -14,7 +14,7 @@
       </History>
     </transition>
 
-    <div :class="showHistory ? 'ml-80' : 'ml-0'" class="flex-grow flex flex-col transition-all duration-300">
+    <div :class="showHistory ? 'ml-0' : 'ml-0'" class="flex-grow flex flex-col transition-all duration-300">
       <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-4 shadow-md">
         <div class="flex items-center justify-between">
           <ToggleButton :showHistory="showHistory" :toggleHistory="toggleHistory" />
@@ -31,39 +31,52 @@
         </div>
       </header>
 
-      <main class="flex-grow overflow-hidden p-6 bg-gray-50">
-        <div ref="chatContainer" class="h-full overflow-y-auto space-y-4 pb-20">
+      <main class="flex-grow p-6 bg-gradient-to-r from-blue-100 via-blue-50 to-purple-50">
+        <div
+          ref="chatContainer"
+          class="h-full overflow-y-auto space-y-4 pb-20 bg-white/70 backdrop-blur-md rounded-lg shadow-xl p-6 border border-blue-200"
+        >
           <template v-if="messages.length">
             <div
               v-for="(message, index) in messages"
               :key="index"
-              :class="[
-                'flex items-end space-x-2 mb-4',
+              :class="[ 
+                'flex items-end mb-4',
                 message.type === 'user' ? 'justify-end' : 'justify-start'
               ]"
             >
-              <div :class="getMessageClass(message.type, index)">
-                <div class="flex items-center space-x-2 mb-1">
-                  <span class="text-xs font-semibold">
+              <div
+                :class="[
+                  'max-w-[70%] px-4 py-3 rounded-lg text-sm shadow-md transition-transform duration-300',
+                  message.type === 'user'
+                    ? 'bg-blue-500 text-white rounded-br-none hover:scale-105'
+                    : 'bg-gray-100 text-gray-800 rounded-bl-none hover:scale-105'
+                ]"
+              >
+                <div class="flex items-center space-x-2 mb-1 text-xs text-gray-500">
+                  <span class="font-semibold">
                     {{ message.type === 'user' ? 'You' : 'AI Assistant' }}
                   </span>
-                  <span v-if="message.type === 'ai'" class="text-xs text-gray-400">
+                  <span v-if="message.type === 'ai'">
                     {{ getTimestamp(message.timestamp) }}
                   </span>
                 </div>
-                <div class="text-sm px-2 py-1 rounded-md">
-                  {{ message.text }}
-                </div>
+                <p>{{ message.text }}</p>
               </div>
             </div>
           </template>
-          <div v-else class="h-full flex flex-col items-center justify-center text-center text-gray-500">
-            <MessageSquare class="w-16 h-16 mb-4" />
-            <p class="text-xl font-medium">No messages yet</p>
+      
+          <div
+            v-else
+            class="h-full flex flex-col items-center justify-center text-center text-gray-500 space-y-4"
+          >
+            <MessageSquare class="w-16 h-16 mb-2 text-blue-500" />
+            <p class="text-xl font-semibold">No messages yet</p>
             <p class="text-sm">Start a conversation by asking a question!</p>
           </div>
         </div>
       </main>
+      
 
       <footer class="bg-white border-t p-4 shadow-md">
         <div class="max-w-3xl mx-auto flex items-center space-x-2">
