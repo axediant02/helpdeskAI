@@ -210,7 +210,7 @@ const sendMessage = async () => {
     console.error('Error generating answer:', error);
     messages.value.push({
       type: 'ai',
-      text: 'Sorry, there was an error generating the answer. Please try again later.',
+      text: 'Sorry, it seems like there is an error generating the answer. Please refresh the page or try again.',
       timestamp: new Date().toISOString()
     });
   } finally {
