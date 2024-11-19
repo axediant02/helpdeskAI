@@ -1,48 +1,78 @@
 <template>
-  <div class="h-screen flex flex-col">
-  <Navbar />
-  <div class="bg-royalBlue h-full flex items-center justify-center" style="background-image: url('https://fps.cdnpk.net/autopromos/search-right-tablet.svg'); background-size: cover; background-position: bottom;">
-    <div class="bg-white/15 backdrop-blur-md rounded-lg shadow-2xl p-4 w-1/2 h-3/5 flex justify-end items-end overflow-hidden pt-10" >
-      <div class="w-1/2 h-full p-4 m-4 flex flex-col mb-6">
-        <div class="flex  items-center">
-          <router-link to="/" class="w-6 h-6 bg-gray-500 text-white p-1 rounded mr-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </router-link>
-          <span class="text-sm font-medium text-gray-700">Back</span>
-        </div>
-        <div class="">
-        <h1 class="text-3xl font-bold mx-auto pr-10 text-center">Welcome Back to the Help Desk!</h1>
-        <p class="text-lg font-medium">Log in to access the resources and support you need to thrive at Consolatrix College.</p>
-        </div>
-      </div>
+  <div class="min-h-screen flex flex-col bg-gray-100">
+    <Navbar />
+    <div class="flex-grow flex items-center justify-center p-4" style="background-image: url('https://fps.cdnpk.net/autopromos/search-right-tablet.svg'); background-size: cover; background-position: bottom;">
+      <div class="bg-white/20 backdrop-blur-md rounded-lg shadow-2xl w-full max-w-4xl overflow-hidden">
+        <div class="flex flex-col md:flex-row">
+          <div class="w-full md:w-1/2 p-8 flex flex-col justify-center bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+            <div class="mb-8">
+              <router-link to="/" class="inline-flex items-center text-sm font-medium text-white hover:text-blue-200 transition-colors">
+                <ArrowLeftIcon class="w-4 h-4 mr-2" />
+                Back to Home
+              </router-link>
+            </div>
+            <h1 class="text-3xl font-bold mb-4">Welcome Back to the Help Desk!</h1>
+            <p class="text-lg mb-6">Log in to access the resources and support you need to thrive at Consolatrix College.</p>
+          </div>
 
-    <div class="w-full max-w-md h-full bg-lightRoyalBlue rounded-lg shadow-xl p-4 flex flex-col justify-center it">
-      <div class="flex items-center justify-center mb-6 ">
-        <h2 class="text-2xl font-bold text-center mx-auto">User Login</h2>
-      </div>
-      <form @submit.prevent="handleLogin">
-        <div class="mb-4">
-          <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-          <input v-model="email" type="email" id="email" name="email" class="border-2 border-gray-300 p-2 w-full rounded" required>
+          <div class="w-full md:w-1/2 p-8 bg-white">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">User Login</h2>
+            <form @submit.prevent="handleLogin" class="space-y-4">
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input v-model="email" type="email" id="email" name="email" required
+                  class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+              </div>
+              <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <div class="relative">
+                  <input 
+                    v-model="password" 
+                    :type="showPassword ? 'text' : 'password'" 
+                    id="password" 
+                    name="password" 
+                    required
+                    class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  >
+                  <button 
+                    type="button" 
+                    @click="togglePasswordVisibility" 
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                  >
+                    <EyeIcon v-if="!showPassword" class="h-5 w-5 text-gray-400" />
+                    <EyeOffIcon v-else class="h-5 w-5 text-gray-400" />
+                  </button>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                  <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
+                </div>
+                <div class="text-sm">
+                  <a href="#" class="font-medium text-blue-600 hover:text-blue-500">Forgot your password?</a>
+                </div>
+              </div>
+              <div>
+                <button type="submit" 
+                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                  Login
+                </button>
+              </div>
+            </form>
+            <p v-if="errorMessage" class="mt-4 text-sm text-red-600">{{ errorMessage }}</p>
+            <div class="mt-6 text-center">
+              <p class="text-sm text-gray-600">
+                Don't have an account?
+                <router-link to="/signup" class="font-medium text-blue-600 hover:text-blue-500">Sign Up</router-link>
+              </p>
+            </div>
+          </div>
         </div>
-        <div class="mb-6 relative">
-          <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-          <input v-model="password" type="password" id="password" name="password" class="border-2 border-gray-300 p-2 w-full rounded" required>
-        </div>
-        <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Login</button>
-      </form>
-      <div class="mt-4">
-        <label for="signup" class="text-sm font-medium flex items-center justify-center">
-          Don't have an account?
-          <router-link to="/signup" class="text-sm font-medium text-blue-700 flex items-center ml-2">Sign Up</router-link>
-        </label>
       </div>
     </div>
   </div>
-  </div>
-</div>
+  
 </template>
 
 <script setup>
@@ -50,41 +80,42 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/store/auth';
 import { useRouter } from 'vue-router';
 import Navbar from '@/components/Navbar.vue';
+import { ArrowLeftIcon, EyeIcon, EyeOffIcon } from 'lucide-vue-next';
 
 const email = ref('');
 const password = ref('');
 const errorMessage = ref('');
+const showPassword = ref(false);
 const authStore = useAuthStore();
 const router = useRouter();
 
+function togglePasswordVisibility() {
+  showPassword.value = !showPassword.value;
+}
+
 async function handleLogin() {
   try {
-    // Validate input before attempting to log in
+    errorMessage.value = '';
+    
     if (!email.value || !password.value) {
       throw new Error("Email and password are required.");
     }
     
-    // Call the login method and wait for the response
     const response = await authStore.login({ email: email.value, password: password.value });
     
-    // Save the token to localStorage if your store returns it
     if (response && response.access_token) {
       localStorage.setItem('token', response.access_token);
     }
-    
-    // Redirect the user after successful login
     router.push('/');
   } catch (error) {
-    // Error handling
-    errorMessage.value = error.response?.data?.message || "Login failed. Please try again.";
-    console.error("Login error:", error); // Added for debugging purposes
+    errorMessage.value = error.response?.data?.message || error.message || "An unexpected error occurred. Please try again.";
+    console.error("Login error:", error);
   }
 }
-
-// Removed onMounted function to prevent automatic token check
 </script>
 
-
 <style scoped>
-
+.bg-gradient-to-br {
+  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+}
 </style>
