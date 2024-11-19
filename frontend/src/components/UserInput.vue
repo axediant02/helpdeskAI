@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex">
+  <div class="h-screen bg-gray-100 flex">
     <transition name="slide-fade">
       <History
         v-if="showHistory"

@@ -28,7 +28,7 @@ class AuthenticationController extends Controller
         ]);
 
         if (!Auth::attempt($validatedData)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Log in failed. Please check your credentials.'], 401);
         }
 
         $user = Auth::user();
