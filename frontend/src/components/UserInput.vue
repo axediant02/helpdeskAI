@@ -35,7 +35,7 @@
 
         <div class="p-6">
           <div class="h-full flex justify-center items-center">
-            <div ref="chatContainer" class="h-full w-1/2 overflow-y-auto mb-10 space-y-4 p-4 rounded-lg shadow-inner bg-black">
+            <div ref="chatContainer" class="h-full w-1/2 overflow-y-auto mb-10 space-y-4 p-4 rounded-lg shadow-inner">
               <template v-if="messages.length">
               <div
                 v-for="(message, index) in messages"
