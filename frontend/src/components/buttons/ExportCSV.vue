@@ -30,9 +30,13 @@
       const response = await axios.get('/api/unanswered-questions');
       const csvContent = ["Question,Answer"];
   
-      response.data.forEach((item) => {
-        csvContent.push(`"${item.question}","${item.answer}"`);
-      });
+      if (Array.isArray(response.data)) {
+        response.data.forEach((item) => {
+          csvContent.push(`"${item.question}","${item.answer}"`);
+        });
+      } else {
+        console.error('Expected an array but received:', response.data);
+      }
   
       const csvString = csvContent.join("\n");
       const encodedUri = encodeURI(`data:text/csv;charset=utf-8,${csvString}`);
