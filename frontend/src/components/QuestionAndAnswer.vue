@@ -1,17 +1,8 @@
 <template>
-  <div class="flex flex-col items-center justify-center p-4 w-screen h-full">
+  <div class="flex flex-col items-center justify-center p-4 w-full h-full">
     <div v-if="isLoading" class="w-10 h-10 animate-spin mb-4"></div>
     <p v-if="isLoading" class="text-lg font-medium text-gray-500">Loading Data, Please Wait...</p>
-
     <div v-else class="min-w-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden">
-      <div>
-        <div class="flex flex-row items-center justify-end w-full mb-4">
-          <Button class="mr-4 w-30 h-10 text-lg text-white flex items-center justify-center" label="Add Admin" @click="openAddAdminModal">
-            <i class="mdi mdi-account-plus mr-2 ml-2"></i>
-          </Button>
-          <AddAdminModal/>
-          <ExportCSV :questions="questions" />
-        </div>
         <table class="min-w-full h-full divide-y divide-gray-200 shadow-md rounded-lg overflow-hidden mt-4">
           <thead class="bg-gray-50">
             <tr>
@@ -41,10 +32,10 @@
               <td class="px-2 py-4 text-sm w-auto sm:w-16">
                 <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
                   <template v-if="isEditing(item.id)">
-                    <button @click="saveEdit" class="text-green-600 hover:text-green-800 p-2 rounded-full bg-green-100">
+                    <button @click="saveEdit" class="text-green-600 hover:text-green-800 p-2 rounded-full bg-green-100 tooltip" title="Save Changes">
                       <i class="mdi mdi-check"></i>
                     </button>
-                    <button @click="cancelEdit" class="text-gray-600 hover:text-gray-800 p-2 rounded-full bg-gray-100">
+                    <button @click="cancelEdit" class="text-gray-600 hover:text-gray-800 p-2 rounded-full bg-gray-100 tooltip" title="Cancel Edit">
                       <i class="mdi mdi-close"></i>
                     </button>
                   </template>
@@ -57,7 +48,6 @@
             </tr>
           </tbody>
         </table>
-      </div>
       <Pagination :currentPage="currentPage" :totalPages="totalPages" @updatePage="currentPage = $event" />
     </div>
   </div>
@@ -67,13 +57,10 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import axios from 'axios';
-import ExportCSV from '@/components/buttons/ExportCSV.vue';
 import Pagination from '@/components/Pagination.vue';
 import EditButton from '@/components/buttons/EditButton.vue';
 import DeleteButton from '@/components/buttons/DeleteButton.vue';
 import '@mdi/font/css/materialdesignicons.css';
-import Button from '@/components/buttons/Button.vue';
-import AddAdminModal from '@/components/AddAdminModal.vue';
 import { useAddAdminStore } from '@/store/addAdminStore';
 import { useToast } from 'vue-toast-notification';
 
@@ -161,4 +148,27 @@ onMounted(fetchData);
 </script>
 
 <style scoped>
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: black;
+  color: white;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+}
 </style>
